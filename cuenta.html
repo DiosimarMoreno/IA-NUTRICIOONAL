@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - Mi Cuenta</title>
+    <link rel="stylesheet" href="cuenta.css">
+</head>
+<body>
+
+    <nav class="navbar-superior">
+        <div class="logo-container-exact">
+            <div class="logo-square-icon">
+                <ion-icon name="pulse-outline"></ion-icon>
+            </div>
+            <div class="logo-text-gradient">NUTRIEXPERT</div>
+        </div>
+        
+        <div class="nav-links-centro">
+            <a href="#" class="nav-link-item active">📊 Panel Principal</a>
+            
+        </div>
+
+        <div class="nav-actions-derecha">
+            <div class="user-profile-wrapper">
+                <div id="user-avatar-circle" class="user-avatar-initial">U</div>
+                <span id="nav-nombre-usuario" class="user-name-text">Cargando...</span>
+            </div>
+            <button id="btn-cerrar-sesion" class="btn-logout-top">
+                <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+            </button>
+        </div>
+    </nav>
+
+    <section class="banner-bienvenida">
+        <img src="img/login_nombre.jpg" alt="Welcome" class="banner-img-bg">
+        <div class="banner-welcome-content">
+            <div class="welcome-text-side">
+                <span class="panel-tag-header">PANEL DE CONTROL</span>
+                
+                <h1 id="bienvenida-usuario" class="welcome-main-title">Hola</h1>
+                
+                <p class="welcome-subtitle">Inicia tu primera evaluación clínica hoy.</p>
+            </div>
+            <div class="welcome-action-side">
+                <button class="btn-nueva-evaluacion-banner" onclick="window.location.href='evaluacion.html'">
+                    <ion-icon name="add-circle-outline"></ion-icon> Nueva Evaluación
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="dashboard-wide-container">
+        <main class="main-content-wide">
+            
+            <section class="seccion-historial-contenedor">
+                <h2 class="titulo-grandioso-historial">Mi Historial</h2>
+                
+                <div class="historial-estado-vacio">
+                    <div class="circulo-icono-historial">
+                        <ion-icon name="bar-chart-outline"></ion-icon>
+                    </div>
+                    
+                    <h3>AÚN NO HAY EVALUACIONES</h3>
+                    <p>Realiza tu primera evaluación clínica para empezar a registrar tu progreso.</p>
+                    
+                    <button class="btn-iniciar-primera-evaluacion" onclick="window.location.href='evaluacion.html'">
+                        + INICIAR MI PRIMERA EVALUACIÓN
+                    </button>
+                </div>
+            </section>
+
+            
+            <div class="dashboard-grid">
+                <section class="grid-card-banner">
+                    <div class="card-image-container">
+                        <img src="img/entrenamiento.jpg" alt="Entrenamiento Óptimo">
+                    </div>
+                    <div class="card-content-data">
+                        <h3>⚡ Entrenamiento Óptimo</h3>
+                        <p>Planes personalizados basados en tu volumen e intensidad clínica ideal.</p>
+                    </div>
+                </section>
+
+                <section class="grid-card-banner">
+                    <div class="card-image-container">
+                        <img src="img/nutricion.jpg" alt="Nutrición Científica">
+                    </div>
+                    <div class="card-content-data">
+                        <h3>🔬 Nutrición Científica</h3>
+                        <p>Macronutrientes calculados mediante algoritmos de inferencia médica.</p>
+                    </div>
+                </section>
+
+                <section class="grid-card-banner">
+                    <div class="card-image-container">
+                        <img src="img/progreso.jpg" alt="Progreso Continuo">
+                    </div>
+                    <div class="card-content-data">
+                        <h3>📈 Progreso Continuo</h3>
+                        <p>Monitoreo constante de tu evolución clínica, antropométrica y física.</p>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - Sistema Experto Clínico</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="vista-landing" class="vista">
+        <nav>
+            <div class="logo">⚡ NUTRI<span>EXPERT</span></div>
+            <div class="nav-buttons">
+                <button class="btn-login ir-a-login">Iniciar Sesión</button>
+                <button class="btn-register ir-a-registro">Registrarse</button>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-info">
+                <div class="tag-version">• SISTEMA EXPERTO CLÍNICO v2.4</div>
+                <h1>Tu cuerpo,<br><span class="texto-degradado">analizado</span><br>con precisión</h1>
+                <p>Sistema experto nutricional que emula el razonamiento clínico de un nutriólogo profesional. Evaluación antropométrica, diagnóstico personalizado y seguimiento de tu progreso en el tiempo.</p>
+                
+                <div class="hero-actions">
+                    <button class="btn-cta-main ir-a-registro">👤 Crear cuenta gratis</button>
+                    <button class="btn-cta-secondary ir-a-login">→ Ya tengo cuenta</button>
+                </div>
+            </div>
+
+            <div class="hero-gallery">
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=500" alt="Fuerza">
+                    <span>Fuerza</span>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=500" alt="Nutrición">
+                    <span>Nutrición</span>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?q=80&w=500" alt="Rendimiento">
+                    <span>Rendimiento</span>
+                </div>
+                <div class="gallery-card">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=500" alt="Salud">
+                    <span>Salud</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <h3>120+</h3>
+                    <p>Reglas de inferencia</p>
+                </div>
+                <div class="stat-item">
+                    <h3>3</h3>
+                    <p>Módulos clínicos</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Personalización</p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon" style="color: var(--verde-mint);">⚖</div>
+                    <div>
+                        <h4>Evaluación Antropométrica</h4>
+                        <p>Calcula IMC, detecta somatotipo y analiza composición corporal con precisión clínica.</p>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon" style="color: #9b51e0;">⚡</div>
+                    <div>
+                        <h4>Motor de Inferencia</h4>
+                        <p>120+ reglas lógicas validadas. El sistema razona como un experto clínico.</p>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon" style="color: #ffb300;">➔</div>
+                    <div>
+                        <h4>Seguimiento de Progreso</h4>
+                        <p>Registra cada evaluación y visualiza tu evolución desde el primer día hasta hoy.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-gallery">
+                <div class="feature-img-card">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=500" alt="Gimnasio">
+                </div>
+                <div class="feature-img-card">
+                    <img src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=500" alt="Vegetales">
+                </div>
+                <div class="feature-img-card">
+                    <img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=500" alt="Atletismo">
+                </div>
+            </div>
+
+            <div class="center-btn-container">
+                <button class="btn-evaluation ir-a-registro">Comenzar Evaluación Gratuita →</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="vista-registro" class="vista hidden">
+    <div class="registro-split-container">
+        
+        <div class="registro-izquierdo">
+            <div class="brand-logo">⚡ NUTRI<span>EXPERT</span></div>
+            <div class="registro-izquierdo-content">
+                <h2>TRANSFORMA<br>TU SALUD CON<br><span class="texto-mint">CIENCIA</span></h2>
+                <p>Evaluaciones clínicas precisas, seguimiento de tu evolución y planes personalizados respaldados por evidencia científica.</p>
+                <div class="badges-container">
+                    <span class="badge">✩ Evaluación clínica</span>
+                    <span class="badge">📈 Seguimiento</span>
+                    <span class="badge">🛡 Respaldado por ciencia</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="registro-derecho">
+            <button class="btn-back btn-volver-inicio">‹ Volver al inicio</button>
+            
+            <div class="form-wrapper">
+                <h2>CREAR CUENTA</h2>
+                <p class="form-subtitle">Únete y comienza tu evaluación clínica gratuita</p>
+                
+                <div class="tab-container">
+                    <button class="tab-btn ir-a-login">→ Entrar</button>
+                    <button class="tab-btn active">👤 Registrarse</button>
+                </div>
+
+                <form id="form-registro">
+                    <div class="input-group">
+                        <label>NOMBRE COMPLETO</label>
+                        <div class="input-with-icon">
+                            <span class="icon">👤</span>
+                            <input type="text" placeholder="Juan García" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>CORREO ELECTRÓNICO</label>
+                        <div class="input-with-icon">
+                            <span class="icon">✉</span>
+                            <input type="email" placeholder="juan@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>EDAD</label>
+                            <div class="input-with-icon">
+                                <span class="icon">📅</span>
+                                <input type="number" placeholder="24" min="1" max="120" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>SEXO</label>
+                            <div class="input-with-icon">
+                                <span class="icon">🧬</span>
+                                <select required>
+                                    <option value="" disabled selected hidden>Selecciona</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                    <option value="O">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>CONTRASEÑA</label>
+                        <div class="input-with-icon">
+                            <span class="icon">🔒</span>
+                            <input type="password" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit-form">👤 CREAR CUENTA</button>
+                </form>
+                <p class="foot-text">¿Ya tienes cuenta? <span class="link-mint ir-a-login">Inicia sesión</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="vista-login" class="vista hidden">
+    <div class="registro-split-container">
+        
+        <div class="registro-izquierdo">
+            <div class="brand-logo">⚡ NUTRI<span>EXPERT</span></div>
+            <div class="registro-izquierdo-content">
+                <h2>TRANSFORMA<br>TU SALUD CON<br><span class="texto-mint">CIENCIA</span></h2>
+                <p>Evaluaciones clínicas precisas, seguimiento de tu evolución y planes personalizados respaldados por evidencia científica.</p>
+                <div class="badges-container">
+                    <span class="badge">✩ Evaluación clínica</span>
+                    <span class="badge">📈 Seguimiento</span>
+                    <span class="badge">🛡 Respaldado por ciencia</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="registro-derecho">
+            <button class="btn-back btn-volver-inicio">‹ Volver al inicio</button>
+            
+            <div class="form-wrapper">
+                <h2>INICIAR SESIÓN</h2>
+                <p class="form-subtitle">Accede a tu historial y continúa tu progreso</p>
+                
+                <div class="tab-container">
+                    <button class="tab-btn active">→ Entrar</button>
+                    <button class="tab-btn ir-a-registro">👤 Registrarse</button>
+                </div>
+
+                <form id="form-login">
+                    <div class="input-group">
+                        <label>CORREO ELECTRÓNICO</label>
+                        <div class="input-with-icon">
+                            <span class="icon">✉</span>
+                            <input type="email" placeholder="juan@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>CONTRASEÑA</label>
+                        <div class="input-with-icon">
+                            <span class="icon">🔒</span>
+                            <input type="password" placeholder="Tu contraseña" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit-login">→ ENTRAR</button>
+                </form>
+                <p class="foot-text">¿No tienes cuenta? <span class="link-mint ir-a-registro">Regístrate gratis</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - Módulo de Evaluación</title>
+    <link rel="stylesheet" href="evaluacion.css">
+</head>
+<body>
+
+    <nav class="navbar-superior">
+        <div class="logo-container-exact">
+            <div class="logo-square-icon">
+                <ion-icon name="pulse-outline"></ion-icon>
+            </div>
+            <div class="logo-text-gradient">NUTRIEXPERT</div>
+        </div>
+        
+        <div class="nav-links-centro">
+            <a href="cuenta.html" class="nav-link-item">📊 Panel Principal</a>
+            
+        </div>
+
+        <div class="nav-actions-derecha">
+            <div class="user-profile-wrapper">
+                <div id="user-avatar-circle" class="user-avatar-initial">U</div>
+                <span id="nav-nombre-usuario" class="user-name-text">Cargando...</span>
+            </div>
+            <button id="btn-cerrar-sesion" class="btn-logout-top">
+                <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+            </button>
+        </div>
+    </nav>
+
+    <section class="banner-evaluacion">
+        <img src="img/evaluacion.jpg" alt="Fondo" class="banner-img-bg">
+        <div class="banner-evaluacion-content">
+            <a href="cuenta.html" class="link-volver"><ion-icon name="chevron-back-outline"></ion-icon> Volver</a>
+            <h1 class="titulo-modulo">MÓDULO DE ADQUISICIÓN DE DATOS</h1>
+        </div>
+    </section>
+
+    <div class="form-main-container">
+        
+        <div class="pasos-indicadores-container">
+            <div class="paso-tab-item active-verde"><span>01</span> Datos Personales</div>
+            <div class="paso-tab-item active-azul"><span>02</span> Composición Corporal</div>
+            <div class="paso-tab-item active-naranja"><span>03</span> Nivel de Actividad</div>
+            <div class="paso-tab-item active-morado"><span>04</span> Objetivo Principal</div>
+        </div>
+
+        <form id="form-evaluacion-clinica">
+            
+            <div class="card-bloque-formulario">
+                <div class="badge-bloque color-verde">
+                    <span class="num-badge">01</span> DATOS PERSONALES
+                </div>
+                <div class="grid-dos-columnas">
+                    <div class="input-field-group">
+                        <label for="estatura">ESTATURA (CM)</label>
+                        <div class="input-with-icon">
+                            <ion-icon name="scale-outline"></ion-icon>
+                            <input type="number" id="estatura" placeholder="175" required>
+                        </div>
+                    </div>
+                    <div class="input-field-group">
+                        <label for="peso">PESO CORPORAL (KG)</label>
+                        <div class="input-with-icon">
+                            <ion-icon name="pulse-outline"></ion-icon>
+                            <input type="number" id="peso" placeholder="70" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-bloque-formulario">
+                <div class="badge-bloque color-azul">
+                    <span class="num-badge">02</span> COMPOSICIÓN CORPORAL <span class="tag-opcional">Opcional</span>
+                </div>
+                <p class="nota-descripcion-bloque">Si dispone de datos de pliegues cutáneos o bioimpedancia, el sistema refinará el diagnóstico de somatotipo.</p>
+                <div class="grid-dos-columnas">
+                    <div class="input-field-group">
+                        <label for="grasa-corporal">% DE GRASA CORPORAL</label>
+                        <div class="input-with-icon">
+                            <ion-icon name="water-outline"></ion-icon>
+                            <input type="number" id="grasa-corporal" placeholder="15">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-bloque-formulario">
+                <div class="badge-bloque color-naranja">
+                    <span class="num-badge">03</span> NIVEL DE ACTIVIDAD FÍSICA
+                </div>
+                
+                <div class="grid-seleccion-cards-actividad">
+                    <label class="card-select-option">
+                        <input type="radio" name="nivel_actividad" value="sedentario">
+                        <div class="card-select-inner">
+                            <span class="opt-title">Sedentario</span>
+                            <span class="opt-desc">Sin ejercicio, trabajo de oficina</span>
+                        </div>
+                    </label>
+
+                    <label class="card-select-option">
+                        <input type="radio" name="nivel_actividad" value="ligera">
+                        <div class="card-select-inner">
+                            <span class="opt-title">Actividad ligera</span>
+                            <span class="opt-desc">1–3 días/semana</span>
+                        </div>
+                    </label>
+
+                    <label class="card-select-option">
+                        <input type="radio" name="nivel_actividad" value="moderado">
+                        <div class="card-select-inner">
+                            <span class="opt-title">Moderadamente activo</span>
+                            <span class="opt-desc">3–5 días/semana</span>
+                        </div>
+                    </label>
+
+                    <label class="card-select-option">
+                        <input type="radio" name="nivel_actividad" value="muy_activo">
+                        <div class="card-select-inner">
+                            <span class="opt-title">Muy activo</span>
+                            <span class="opt-desc">6–7 días intenso</span>
+                        </div>
+                    </label>
+
+                    <label class="card-select-option">
+                        <input type="radio" name="nivel_actividad" value="extremo">
+                        <div class="card-select-inner">
+                            <span class="opt-title">Extremadamente activo</span>
+                            <span class="opt-desc">Dobles sesiones</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="card-bloque-formulario">
+                <div class="badge-bloque color-morado">
+                    <span class="num-badge">04</span> OBJETIVO PRINCIPAL
+                </div>
+                
+                <div class="grid-seleccion-cards-objetivo">
+                    <label class="card-select-option-box">
+                        <input type="radio" name="objetivo_principal" value="hipertrofia">
+                        <div class="card-box-inner-dest" data-target-color="verde">
+                            <div class="box-icon-container color-icon-verde">
+                                <ion-icon name="barbell-outline"></ion-icon>
+                            </div>
+                            <span class="box-title">Hipertrofia Muscular</span>
+                            <span class="box-desc">Ganar masa y fuerza</span>
+                        </div>
+                    </label>
+
+                    <label class="card-select-option-box">
+                        <input type="radio" name="objetivo_principal" value="mantenimiento">
+                        <div class="card-box-inner-dest" data-target-color="azul">
+                            <div class="box-icon-container color-icon-azul">
+                                <ion-icon name="shield-outline"></ion-icon>
+                            </div>
+                            <span class="box-title">Mantenimiento</span>
+                            <span class="box-desc">Preservar composición actual</span>
+                        </div>
+                    </label>
+
+                    <label class="card-select-option-box">
+                        <input type="radio" name="objetivo_principal" value="perdida">
+                        <div class="card-box-inner-dest" data-target-color="naranja">
+                            <div class="box-icon-container color-icon-naranja">
+                                <ion-icon name="trending-up-outline"></ion-icon>
+                            </div>
+                            <span class="box-title">Pérdida de Grasa</span>
+                            <span class="box-desc">Reducir % grasa corporal</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="seccion-submit-evaluacion">
+                <button type="submit" id="btn-submit-clinico" id="btn-submit-clinico"  class="btn-ejecutar-analisis" disabled>
+                    <ion-icon name="bar-chart-outline"></ion-icon> EJECUTAR ANÁLISIS CLÍNICO <ion-icon name="arrow-forward-outline"></ion-icon>
+                </button>
+                <p id="helper-submit-text" class="foot-helper-text">Por favor complete todos los campos obligatorios para desbloquear el análisis.</p>
+            </div>
+
+        </form>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

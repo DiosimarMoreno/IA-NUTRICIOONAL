@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - Informe de Resultados</title>
+    <link rel="stylesheet" href="resultados.css">
+</head>
+<body>
+
+    <nav class="navbar-superior">
+        <div class="logo-container-exact">
+            <div class="logo-square-icon">
+                <ion-icon name="pulse-outline"></ion-icon>
+            </div>
+            <div class="logo-text-gradient">NUTRIEXPERT</div>
+        </div>
+        
+        <div class="nav-links-centro">
+            <a href="cuenta.html" class="nav-link-item">📊 Panel Principal</a>
+            <a href="cuenta.html" class="nav-link-item">📈 Mi Historial</a>
+        </div>
+
+        <div class="nav-actions-derecha">
+            <div class="user-profile-wrapper">
+                <div id="user-avatar-circle" class="user-avatar-initial">U</div>
+                <span id="nav-nombre-usuario" class="user-name-text">Cargando...</span>
+            </div>
+            <button id="btn-cerrar-sesion" class="btn-logout-top">
+                <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+            </button>
+        </div>
+    </nav>
+
+<section class="banner-resultados">
+        <img src="img/resultados.jpg" alt="Fondo Resultados" class="banner-img-bg">
+        <div class="banner-resultados-content">
+            <a href="evaluacion.html" class="link-volver">
+                <ion-icon name="chevron-back-outline"></ion-icon> Volver a Evaluación
+            </a>
+            <div class="header-titulos">
+                <span class="tag-informe">DIAGNÓSTICO EN TIEMPO REAL</span>
+                <h1 id="bienvenida-usuario" class="welcome-main-title" >Hola</h1>
+            </div>
+        </div>
+    </section>
+
+    <div class="resultados-main-container">
+
+        <div class="card-bloque-resultado shadow-neon-azul">
+            <div class="badge-bloque color-azul">
+                <ion-icon name="clipboard-outline"></ion-icon> PARÁMETROS CLÍNICOS INTRODUCIDOS
+            </div>
+            
+            <div class="grid-datos-introducidos">
+                <div class="dato-introducido-box">
+                    <span class="label-intro">Estatura</span>
+                    <span class="valor-intro" id="param-estatura">0 cm</span>
+                </div>
+                <div class="dato-introducido-box">
+                    <span class="label-intro">Peso Corporal</span>
+                    <span class="valor-intro" id="param-peso">0 kg</span>
+                </div>
+                <div class="dato-introducido-box">
+                    <span class="label-intro">% Grasa Estimado</span>
+                    <span class="valor-intro" id="param-grasa">0%</span>
+                </div>
+                <div class="dato-introducido-box">
+                    <span class="label-intro">Actividad Física</span>
+                    <span class="valor-intro" id="param-actividad">Sin asignar</span>
+                </div>
+                <div class="dato-introducido-box full-width-column">
+                    <span class="label-intro">Objetivo Clínico Establecido</span>
+                    <span class="valor-intro" id="param-objetivo">Sin asignar</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-bloque-resultado shadow-neon-verde">
+            <div class="badge-bloque color-verde">
+                <ion-icon name="analytics-outline"></ion-icon> ESTADO ANTROPOMÉTRICO ACTUAL
+            </div>
+            
+            <div class="grid-metricas-antropo">
+                <div class="mini-card-metrica neon-border-verde">
+                    <div class="metrica-header">
+                        <span class="metrica-label">ÍNDICE DE MASA CORPORAL (IMC)</span>
+                        <ion-icon name="bar-chart-outline" class="icon-metrica neon-txt-verde"></ion-icon>
+                    </div>
+                    <h2 class="metrica-valor neon-txt-verde" id="res-imc">0.0</h2>
+                    <span class="metrica-estado estado-normal" id="res-imc-estado">-</span>
+                </div>
+
+                <div class="mini-card-metrica neon-border-blanco">
+                    <div class="metrica-header">
+                        <span class="metrica-label">PESO IDEAL ESTIMADO</span>
+                        <ion-icon name="trending-up-outline" class="icon-metrica neon-txt-blanco"></ion-icon>
+                    </div>
+                    <h2 class="metrica-valor" id="res-peso-ideal">0.0 kg</h2>
+                    <span class="metrica-subtext" id="res-peso-rango">Rango Saludable: 0kg - 0kg</span>
+                </div>
+
+                <div class="mini-card-metrica neon-border-azul">
+                    <div class="metrica-header">
+                        <span class="metrica-label">PREDOMINIO DE SOMATOTIPO</span>
+                        <ion-icon name="pulse-outline" class="icon-metrica neon-txt-azul"></ion-icon>
+                    </div>
+                    <h2 class="metrica-valor neon-txt-azul" id="res-somatotipo">-</h2>
+                    <span class="metrica-subtext" id="res-somatotipo-desc">Esperando análisis...</span>
+                </div>
+
+                <div class="mini-card-metrica neon-border-naranja">
+                    <div class="metrica-header">
+                        <span class="metrica-label">MASA GRASA ESTIMADA</span>
+                        <ion-icon name="flame-outline" class="icon-metrica neon-txt-naranja"></ion-icon>
+                    </div>
+                    <h2 class="metrica-valor neon-txt-naranja" id="res-grasa-masa">0.0 kg</h2>
+                    <span class="metrica-subtext" id="res-grasa-desc">Cálculo basado en porcentaje</span>
+                </div>
+
+                <div class="mini-card-metrica neon-border-azul">
+                    <div class="metrica-header">
+                        <span class="metrica-label">MASA LIBRE DE GRASA (MM)</span>
+                        <ion-icon name="flame-outline" class="icon-metrica neon-txt-azul"></ion-icon>
+                    </div>
+                    <h2 class="metrica-valor neon-txt-azul" id="res-masa-magra">0.0 kg</h2>
+                    <span class="metrica-subtext" id="res-magra-desc">Músculo, huesos y órganos</span>
+                </div>
+
+                <div class="mini-card-metrica neon-border-verde">
+                    <div class="metrica-header">
+                        <span class="metrica-label">AGUA CORPORAL ESTIMADA</span>
+                        <ion-icon name="water-outline" class="icon-metrica neon-txt-verde"></ion-icon>
+                    </div>
+                    <h2 class="metrica-valor neon-txt-verde" id="res-agua-corporal">0.0 L</h2>
+                    <span class="metrica-subtext" id="res-agua-desc">Porcentaje de hidratación celular</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-bloque-resultado shadow-neon-morado">
+            <div class="badge-bloque color-morado">
+                <ion-icon name="flame-outline"></ion-icon> BALANCE ENERGÉTICO Y MACRONUTRIENTES
+            </div>
+            
+            <div class="contenedor-balance-calorico">
+                <div class="calorias-card-central">
+                    <span class="calorias-titulo">Gasto Energético Diario (TMB)</span>
+                    <div class="calorias-numero" id="res-tmb">0 <span class="unidad-cal">kcal</span></div>
+                    <p class="calorias-descripcion">Calorías requeridas para mantener las funciones vitales en reposo absoluto.</p>
+                </div>
+                
+                <div class="calorias-card-central objetivo-card">
+                    <span class="calorias-titulo">Calorías Objetivo Recomendadas</span>
+                    <div class="calorias-numero neon-txt-morado" id="res-calorias-objetivo">0 <span class="unidad-cal">kcal</span></div>
+                    <p class="calorias-descripcion">Ajustadas matemáticamente según el objetivo clínico seleccionado.</p>
+                </div>
+            </div>
+
+            <h3 class="subtitulo-seccion-macros">Distribución Óptima de Macronutrientes</h3>
+            <div class="grid-tres-columnas-macros">
+                
+                <div class="macro-box-card borde-card-azul">
+                    <div class="macro-header-box">
+                        <div class="macro-title-group">
+                            <ion-icon name="egg-outline" class="icon-macro neon-txt-azul"></ion-icon>
+                            <span class="macro-name">PROTEÍNAS</span>
+                        </div>
+                        <span class="macro-percentage neon-txt-azul" id="pct-proteina">0%</span>
+                    </div>
+                    <div class="macro-gramos" id="macro-proteina">0g</div>
+                    <span class="macro-cal-equivalentes" id="cal-proteina">0 kcal aportadas</span>
+                </div>
+
+                <div class="macro-box-card borde-card-verde">
+                    <div class="macro-header-box">
+                        <div class="macro-title-group">
+                            <ion-icon name="leaf-outline" class="icon-macro neon-txt-verde"></ion-icon>
+                            <span class="macro-name">CARBOHIDRATOS</span>
+                        </div>
+                        <span class="macro-percentage neon-txt-verde" id="pct-carbos">0%</span>
+                    </div>
+                    <div class="macro-gramos" id="macro-carbos">0g</div>
+                    <span class="macro-cal-equivalentes" id="cal-carbos">0 kcal aportadas</span>
+                </div>
+
+                <div class="macro-box-card borde-card-naranja">
+                    <div class="macro-header-box">
+                        <div class="macro-title-group">
+                            <ion-icon name="flame-outline" class="icon-macro neon-txt-naranja"></ion-icon>
+                            <span class="macro-name">GRASAS (LÍPIDOS)</span>
+                        </div>
+                        <span class="macro-percentage neon-txt-naranja" id="pct-grasas">0%</span>
+                    </div>
+                    <div class="macro-gramos" id="macro-grasas">0g</div>
+                    <span class="macro-cal-equivalentes" id="cal-grasas">0 kcal aportadas</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="seccion-acciones-resultado">
+            <button class="btn-ver-plan-completo" id="btn-ver-plan">
+                <ion-icon name="nutrition-outline"></ion-icon> ver plan completo dieta <ion-icon name="remove-outline"></ion-icon> y entrenamiento <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
+        </div>
+
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
