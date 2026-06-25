@@ -13,4 +13,13 @@ def create_app():
     from app.routes.auth import auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.routes.account import account_bp
+    app.register_blueprint(account_bp)
+
+    from app.routes.evaluation import evaluation_bp
+    app.register_blueprint(evaluation_bp)
+
+    from app.routes.results import results_bp
+    app.register_blueprint(results_bp)
+
     return app
