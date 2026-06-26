@@ -5,11 +5,11 @@
     --azul-boton: #0072ff;
     --mint-fuerte: #00e676;
     --morado-neon: #9b51e0;
-    /* Gradiente exacto que va de cian/verde-menta a azul/morado */
-    --gradiente-app: linear-gradient(135deg, #00f2fe 0%, #0072ff 50%, #9b51e0 100%);
     --texto-blanco: #ffffff;
     --texto-gris: #7a8aa4;
     --borde-tarjeta: rgba(255, 255, 255, 0.05);
+    /* Gradiente exacto que va de cian/verde-menta a azul/morado */
+    --gradiente-app: linear-gradient(135deg, #00f2fe 0%, #0072ff 50%, #9b51e0 100%);
 }
 
 * {
@@ -428,3 +428,18 @@ body {
     font-size: 42px; 
     letter-spacing: 0.5px;
 }
+
+.flash-contenedor {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+    max-width: 500px; width: 90%;
+}
+.flash-mensaje {
+    padding: 14px 20px; border-radius: 10px; font-size: 14px;
+    font-weight: 600; text-align: center; animation: fadeIn 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.flash-success { background: #00e676; color: #0a0e1a; }
+.flash-error { background: #ff1744; color: #fff; }
+.flash-info { background: #2979ff; color: #fff; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }

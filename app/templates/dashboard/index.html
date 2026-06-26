@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriExpert - Mi Cuenta</title>
-    <link rel="stylesheet" href="/css/cuenta.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cuenta.css')}}">
 </head>
 <body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <nav class="navbar-superior">
         <div class="logo-container-exact">
@@ -17,35 +27,39 @@
         </div>
         
         <div class="nav-links-centro">
-            <a href="#" class="nav-link-item active">📊 Panel Principal</a>
-            
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link-item active">📊 Panel Principal</a>
         </div>
 
         <div class="nav-actions-derecha">
             <div class="user-profile-wrapper">
-                <div id="user-avatar-circle" class="user-avatar-initial">U</div>
-                <span id="nav-nombre-usuario" class="user-name-text">Cargando...</span>
+                <div class="user-avatar-initial">{{ current_user.nombre[0] | upper }}</div>
+                <span class="user-name-text">{{ current_user.nombre | lower }}</span>
             </div>
-            <button id="btn-cerrar-sesion" class="btn-logout-top">
-                <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
-            </button>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-logout-top">
+                    <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+                </button>
+            </form>
         </div>
     </nav>
 
     <section class="banner-bienvenida">
-        <img src="img/login_nombre.jpg" alt="Welcome" class="banner-img-bg">
+        <img src="{{ url_for('static', filename='img/login_nombre.jpg') }}" alt="Welcome" class="banner-img-bg">
         <div class="banner-welcome-content">
             <div class="welcome-text-side">
                 <span class="panel-tag-header">PANEL DE CONTROL</span>
                 
-                <h1 id="bienvenida-usuario" class="welcome-main-title">Hola</h1>
+                <h1 class="welcome-main-title">Hola, <span class="nombre-completo-gradiente">{{ current_user.nombre }}</span></h1>
                 
                 <p class="welcome-subtitle">Inicia tu primera evaluación clínica hoy.</p>
             </div>
             <div class="welcome-action-side">
-                <button class="btn-nueva-evaluacion-banner" onclick="window.location.href='evaluacion.html'">
-                    <ion-icon name="add-circle-outline"></ion-icon> Nueva Evaluación
-                </button>
+                <a href="{{ url_for('dashboard.evaluacion') }}">
+                    <button class="btn-nueva-evaluacion-banner">
+                        <ion-icon name="add-circle-outline"></ion-icon> Nueva Evaluación
+                    </button>
+                </a>
             </div>
         </div>
     </section>
@@ -56,6 +70,17 @@
             <section class="seccion-historial-contenedor">
                 <h2 class="titulo-grandioso-historial">Mi Historial</h2>
                 
+                {% if evaluaciones %}
+                <div class="historial-lista">
+                    {% for ev in evaluaciones %}
+                    <div class="historial-item">
+                        <span>{{ ev.fecha_registro.strftime('%d/%m/%Y') }}</span>
+                        <span>IMC: {{ ev.imc }}</span>
+                        <a href="{{ url_for('dashboard.resultados', id=ev.id) }}">Ver</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
                 <div class="historial-estado-vacio">
                     <div class="circulo-icono-historial">
                         <ion-icon name="bar-chart-outline"></ion-icon>
@@ -64,17 +89,20 @@
                     <h3>AÚN NO HAY EVALUACIONES</h3>
                     <p>Realiza tu primera evaluación clínica para empezar a registrar tu progreso.</p>
                     
-                    <button class="btn-iniciar-primera-evaluacion" onclick="window.location.href='evaluacion.html'">
-                        + INICIAR MI PRIMERA EVALUACIÓN
-                    </button>
+                    <a href="{{ url_for('dashboard.evaluacion') }}">
+                        <button class="btn-iniciar-primera-evaluacion">
+                            + INICIAR MI PRIMERA EVALUACIÓN
+                        </button>
+                    </a>
                 </div>
+                {% endif %}
             </section>
 
             
             <div class="dashboard-grid">
                 <section class="grid-card-banner">
                     <div class="card-image-container">
-                        <img src="img/entrenamiento.jpg" alt="Entrenamiento Óptimo">
+                        <img src="{{ url_for('static', filename='img/entrenamiento.jpg') }}" alt="Entrenamiento Óptimo">
                     </div>
                     <div class="card-content-data">
                         <h3>⚡ Entrenamiento Óptimo</h3>
@@ -84,7 +112,7 @@
 
                 <section class="grid-card-banner">
                     <div class="card-image-container">
-                        <img src="img/nutricion.jpg" alt="Nutrición Científica">
+                        <img src="{{ url_for('static', filename='img/nutricion.jpg') }}" alt="Nutrición Científica">
                     </div>
                     <div class="card-content-data">
                         <h3>🔬 Nutrición Científica</h3>
@@ -94,7 +122,7 @@
 
                 <section class="grid-card-banner">
                     <div class="card-image-container">
-                        <img src="img/progreso.jpg" alt="Progreso Continuo">
+                        <img src="{{ url_for('static', filename='img/progreso.jpg') }}" alt="Progreso Continuo">
                     </div>
                     <div class="card-content-data">
                         <h3>📈 Progreso Continuo</h3>
@@ -108,7 +136,5 @@
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
-    <script src="scripts.js"></script>
 </body>
 </html>

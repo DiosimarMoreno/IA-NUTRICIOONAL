@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriExpert - Informe de Resultados</title>
-    <link rel="stylesheet" href="/css/resultados.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/resultados.css')}}">
 </head>
 <body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <nav class="navbar-superior">
         <div class="logo-container-exact">
@@ -17,30 +27,33 @@
         </div>
         
         <div class="nav-links-centro">
-            <a href="cuenta.html" class="nav-link-item">📊 Panel Principal</a>
-            <a href="cuenta.html" class="nav-link-item">📈 Mi Historial</a>
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link-item">📊 Panel Principal</a>
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link-item">📈 Mi Historial</a>
         </div>
 
         <div class="nav-actions-derecha">
             <div class="user-profile-wrapper">
-                <div id="user-avatar-circle" class="user-avatar-initial">U</div>
-                <span id="nav-nombre-usuario" class="user-name-text">Cargando...</span>
+                <div class="user-avatar-initial">{{ current_user.nombre[0] | upper }}</div>
+                <span class="user-name-text">{{ current_user.nombre | lower }}</span>
             </div>
-            <button id="btn-cerrar-sesion" class="btn-logout-top">
-                <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
-            </button>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-logout-top">
+                    <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+                </button>
+            </form>
         </div>
     </nav>
 
 <section class="banner-resultados">
-        <img src="img/resultados.jpg" alt="Fondo Resultados" class="banner-img-bg">
+        <img src="{{ url_for('static', filename='img/resultados.jpg') }}" alt="Fondo Resultados" class="banner-img-bg">
         <div class="banner-resultados-content">
-            <a href="evaluacion.html" class="link-volver">
+            <a href="{{ url_for('dashboard.evaluacion') }}" class="link-volver">
                 <ion-icon name="chevron-back-outline"></ion-icon> Volver a Evaluación
             </a>
             <div class="header-titulos">
                 <span class="tag-informe">DIAGNÓSTICO EN TIEMPO REAL</span>
-                <h1 id="bienvenida-usuario" class="welcome-main-title" >Hola</h1>
+                <h1 class="welcome-main-title">Hola, <span class="nombre-completo-gradiente">{{ current_user.nombre }}</span></h1>
             </div>
         </div>
     </section>
@@ -55,23 +68,23 @@
             <div class="grid-datos-introducidos">
                 <div class="dato-introducido-box">
                     <span class="label-intro">Estatura</span>
-                    <span class="valor-intro" id="param-estatura">0 cm</span>
+                    <span class="valor-intro">{{ evaluacion.estatura }} cm</span>
                 </div>
                 <div class="dato-introducido-box">
                     <span class="label-intro">Peso Corporal</span>
-                    <span class="valor-intro" id="param-peso">0 kg</span>
+                    <span class="valor-intro">{{ evaluacion.peso }} kg</span>
                 </div>
                 <div class="dato-introducido-box">
                     <span class="label-intro">% Grasa Estimado</span>
-                    <span class="valor-intro" id="param-grasa">0%</span>
+                    <span class="valor-intro">{{ evaluacion.porcentaje_grasa or '—' }}%</span>
                 </div>
                 <div class="dato-introducido-box">
                     <span class="label-intro">Actividad Física</span>
-                    <span class="valor-intro" id="param-actividad">Sin asignar</span>
+                    <span class="valor-intro">{{ r.actividad_etiqueta or evaluacion.nivel_actividad }}</span>
                 </div>
                 <div class="dato-introducido-box full-width-column">
                     <span class="label-intro">Objetivo Clínico Establecido</span>
-                    <span class="valor-intro" id="param-objetivo">Sin asignar</span>
+                    <span class="valor-intro">{{ r.objetivo_etiqueta or evaluacion.objetivo_principal }}</span>
                 </div>
             </div>
         </div>
@@ -87,8 +100,8 @@
                         <span class="metrica-label">ÍNDICE DE MASA CORPORAL (IMC)</span>
                         <ion-icon name="bar-chart-outline" class="icon-metrica neon-txt-verde"></ion-icon>
                     </div>
-                    <h2 class="metrica-valor neon-txt-verde" id="res-imc">0.0</h2>
-                    <span class="metrica-estado estado-normal" id="res-imc-estado">-</span>
+                    <h2 class="metrica-valor neon-txt-verde">{{ r.imc or '0.0' }}</h2>
+                    <span class="metrica-estado estado-normal">{{ r.clasificacion_imc or '—' }}</span>
                 </div>
 
                 <div class="mini-card-metrica neon-border-blanco">
@@ -96,8 +109,8 @@
                         <span class="metrica-label">PESO IDEAL ESTIMADO</span>
                         <ion-icon name="trending-up-outline" class="icon-metrica neon-txt-blanco"></ion-icon>
                     </div>
-                    <h2 class="metrica-valor" id="res-peso-ideal">0.0 kg</h2>
-                    <span class="metrica-subtext" id="res-peso-rango">Rango Saludable: 0kg - 0kg</span>
+                    <h2 class="metrica-valor">{{ r.peso_ideal or '0.0' }} kg</h2>
+                    <span class="metrica-subtext">Rango Saludable: {{ r.rango_min or '0' }}kg - {{ r.rango_max or '0' }}kg</span>
                 </div>
 
                 <div class="mini-card-metrica neon-border-azul">
@@ -105,8 +118,8 @@
                         <span class="metrica-label">PREDOMINIO DE SOMATOTIPO</span>
                         <ion-icon name="pulse-outline" class="icon-metrica neon-txt-azul"></ion-icon>
                     </div>
-                    <h2 class="metrica-valor neon-txt-azul" id="res-somatotipo">-</h2>
-                    <span class="metrica-subtext" id="res-somatotipo-desc">Esperando análisis...</span>
+                    <h2 class="metrica-valor neon-txt-azul">{{ r.somatotipo or '—' }}</h2>
+                    <span class="metrica-subtext">{{ r.somatotipo_desc or 'Esperando análisis...' }}</span>
                 </div>
 
                 <div class="mini-card-metrica neon-border-naranja">
@@ -114,8 +127,8 @@
                         <span class="metrica-label">MASA GRASA ESTIMADA</span>
                         <ion-icon name="flame-outline" class="icon-metrica neon-txt-naranja"></ion-icon>
                     </div>
-                    <h2 class="metrica-valor neon-txt-naranja" id="res-grasa-masa">0.0 kg</h2>
-                    <span class="metrica-subtext" id="res-grasa-desc">Cálculo basado en porcentaje</span>
+                    <h2 class="metrica-valor neon-txt-naranja">{{ r.masa_grasa or '0.0' }} kg</h2>
+                    <span class="metrica-subtext">Cálculo basado en porcentaje</span>
                 </div>
 
                 <div class="mini-card-metrica neon-border-azul">
@@ -123,8 +136,8 @@
                         <span class="metrica-label">MASA LIBRE DE GRASA (MM)</span>
                         <ion-icon name="flame-outline" class="icon-metrica neon-txt-azul"></ion-icon>
                     </div>
-                    <h2 class="metrica-valor neon-txt-azul" id="res-masa-magra">0.0 kg</h2>
-                    <span class="metrica-subtext" id="res-magra-desc">Músculo, huesos y órganos</span>
+                    <h2 class="metrica-valor neon-txt-azul">{{ r.masa_magra or '0.0' }} kg</h2>
+                    <span class="metrica-subtext">Músculo, huesos y órganos</span>
                 </div>
 
                 <div class="mini-card-metrica neon-border-verde">
@@ -132,8 +145,8 @@
                         <span class="metrica-label">AGUA CORPORAL ESTIMADA</span>
                         <ion-icon name="water-outline" class="icon-metrica neon-txt-verde"></ion-icon>
                     </div>
-                    <h2 class="metrica-valor neon-txt-verde" id="res-agua-corporal">0.0 L</h2>
-                    <span class="metrica-subtext" id="res-agua-desc">Porcentaje de hidratación celular</span>
+                    <h2 class="metrica-valor neon-txt-verde">{{ r.agua_corporal or '0.0' }} L</h2>
+                    <span class="metrica-subtext">Porcentaje de hidratación celular</span>
                 </div>
             </div>
         </div>
@@ -146,13 +159,13 @@
             <div class="contenedor-balance-calorico">
                 <div class="calorias-card-central">
                     <span class="calorias-titulo">Gasto Energético Diario (TMB)</span>
-                    <div class="calorias-numero" id="res-tmb">0 <span class="unidad-cal">kcal</span></div>
+                    <div class="calorias-numero">{{ r.tmb or '0' }} <span class="unidad-cal">kcal</span></div>
                     <p class="calorias-descripcion">Calorías requeridas para mantener las funciones vitales en reposo absoluto.</p>
                 </div>
                 
                 <div class="calorias-card-central objetivo-card">
                     <span class="calorias-titulo">Calorías Objetivo Recomendadas</span>
-                    <div class="calorias-numero neon-txt-morado" id="res-calorias-objetivo">0 <span class="unidad-cal">kcal</span></div>
+                    <div class="calorias-numero neon-txt-morado">{{ r.calorias_objetivo or '0' }} <span class="unidad-cal">kcal</span></div>
                     <p class="calorias-descripcion">Ajustadas matemáticamente según el objetivo clínico seleccionado.</p>
                 </div>
             </div>
@@ -166,10 +179,10 @@
                             <ion-icon name="egg-outline" class="icon-macro neon-txt-azul"></ion-icon>
                             <span class="macro-name">PROTEÍNAS</span>
                         </div>
-                        <span class="macro-percentage neon-txt-azul" id="pct-proteina">0%</span>
+                        <span class="macro-percentage neon-txt-azul">{{ r.pct_proteina or '0' }}%</span>
                     </div>
-                    <div class="macro-gramos" id="macro-proteina">0g</div>
-                    <span class="macro-cal-equivalentes" id="cal-proteina">0 kcal aportadas</span>
+                    <div class="macro-gramos">{{ r.proteina_g or '0' }}g</div>
+                    <span class="macro-cal-equivalentes">{{ r.cal_proteina or '0' }} kcal aportadas</span>
                 </div>
 
                 <div class="macro-box-card borde-card-verde">
@@ -178,10 +191,10 @@
                             <ion-icon name="leaf-outline" class="icon-macro neon-txt-verde"></ion-icon>
                             <span class="macro-name">CARBOHIDRATOS</span>
                         </div>
-                        <span class="macro-percentage neon-txt-verde" id="pct-carbos">0%</span>
+                        <span class="macro-percentage neon-txt-verde">{{ r.pct_carbos or '0' }}%</span>
                     </div>
-                    <div class="macro-gramos" id="macro-carbos">0g</div>
-                    <span class="macro-cal-equivalentes" id="cal-carbos">0 kcal aportadas</span>
+                    <div class="macro-gramos">{{ r.carbos_g or '0' }}g</div>
+                    <span class="macro-cal-equivalentes">{{ r.cal_carbos or '0' }} kcal aportadas</span>
                 </div>
 
                 <div class="macro-box-card borde-card-naranja">
@@ -190,25 +203,26 @@
                             <ion-icon name="flame-outline" class="icon-macro neon-txt-naranja"></ion-icon>
                             <span class="macro-name">GRASAS (LÍPIDOS)</span>
                         </div>
-                        <span class="macro-percentage neon-txt-naranja" id="pct-grasas">0%</span>
+                        <span class="macro-percentage neon-txt-naranja">{{ r.pct_grasas or '0' }}%</span>
                     </div>
-                    <div class="macro-gramos" id="macro-grasas">0g</div>
-                    <span class="macro-cal-equivalentes" id="cal-grasas">0 kcal aportadas</span>
+                    <div class="macro-gramos">{{ r.grasas_g or '0' }}g</div>
+                    <span class="macro-cal-equivalentes">{{ r.cal_grasas or '0' }} kcal aportadas</span>
                 </div>
 
             </div>
         </div>
 
         <div class="seccion-acciones-resultado">
-            <button class="btn-ver-plan-completo" id="btn-ver-plan">
-                <ion-icon name="nutrition-outline"></ion-icon> ver plan completo dieta <ion-icon name="remove-outline"></ion-icon> y entrenamiento <ion-icon name="arrow-forward-outline"></ion-icon>
-            </button>
+            <a href="{{ url_for('dashboard.evaluacion') }}">
+                <button class="btn-ver-plan-completo">
+                    <ion-icon name="nutrition-outline"></ion-icon> Nueva Evaluación <ion-icon name="arrow-forward-outline"></ion-icon>
+                </button>
+            </a>
         </div>
 
     </div>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="scripts.js"></script>
 </body>
 </html>

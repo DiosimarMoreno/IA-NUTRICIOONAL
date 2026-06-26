@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriExpert - Módulo de Evaluación</title>
-    <link rel="stylesheet" href="/css/evaluacion.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/evaluacion.css')}}">
 </head>
 <body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <nav class="navbar-superior">
         <div class="logo-container-exact">
@@ -17,25 +27,27 @@
         </div>
         
         <div class="nav-links-centro">
-            <a href="cuenta.html" class="nav-link-item">📊 Panel Principal</a>
-            
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link-item">📊 Panel Principal</a>
         </div>
 
         <div class="nav-actions-derecha">
             <div class="user-profile-wrapper">
-                <div id="user-avatar-circle" class="user-avatar-initial">U</div>
-                <span id="nav-nombre-usuario" class="user-name-text">Cargando...</span>
+                <div class="user-avatar-initial">{{ current_user.nombre[0] | upper }}</div>
+                <span class="user-name-text">{{ current_user.nombre | lower }}</span>
             </div>
-            <button id="btn-cerrar-sesion" class="btn-logout-top">
-                <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
-            </button>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-logout-top">
+                    <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+                </button>
+            </form>
         </div>
     </nav>
 
     <section class="banner-evaluacion">
-        <img src="img/evaluacion.jpg" alt="Fondo" class="banner-img-bg">
+        <img src="{{ url_for('static', filename='img/evaluacion.jpg') }}" alt="Fondo" class="banner-img-bg">
         <div class="banner-evaluacion-content">
-            <a href="cuenta.html" class="link-volver"><ion-icon name="chevron-back-outline"></ion-icon> Volver</a>
+            <a href="{{ url_for('dashboard.index') }}" class="link-volver"><ion-icon name="chevron-back-outline"></ion-icon> Volver</a>
             <h1 class="titulo-modulo">MÓDULO DE ADQUISICIÓN DE DATOS</h1>
         </div>
     </section>
@@ -49,7 +61,8 @@
             <div class="paso-tab-item active-morado"><span>04</span> Objetivo Principal</div>
         </div>
 
-        <form id="form-evaluacion-clinica">
+        <form id="form-evaluacion-clinica" method="POST" action="{{ url_for('dashboard.evaluar_post') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             
             <div class="card-bloque-formulario">
                 <div class="badge-bloque color-verde">
@@ -60,14 +73,14 @@
                         <label for="estatura">ESTATURA (CM)</label>
                         <div class="input-with-icon">
                             <ion-icon name="scale-outline"></ion-icon>
-                            <input type="number" id="estatura" placeholder="175" required>
+                            <input type="number" name="estatura" id="estatura" placeholder="175" required>
                         </div>
                     </div>
                     <div class="input-field-group">
                         <label for="peso">PESO CORPORAL (KG)</label>
                         <div class="input-with-icon">
                             <ion-icon name="pulse-outline"></ion-icon>
-                            <input type="number" id="peso" placeholder="70" required>
+                            <input type="number" name="peso" id="peso" placeholder="70" required>
                         </div>
                     </div>
                 </div>
@@ -83,7 +96,7 @@
                         <label for="grasa-corporal">% DE GRASA CORPORAL</label>
                         <div class="input-with-icon">
                             <ion-icon name="water-outline"></ion-icon>
-                            <input type="number" id="grasa-corporal" placeholder="15">
+                            <input type="number" name="porcentaje_grasa" id="grasa-corporal" placeholder="15">
                         </div>
                     </div>
                 </div>
@@ -179,7 +192,7 @@
             </div>
 
             <div class="seccion-submit-evaluacion">
-                <button type="submit" id="btn-submit-clinico" id="btn-submit-clinico"  class="btn-ejecutar-analisis" disabled>
+                <button type="submit" id="btn-submit-clinico" class="btn-ejecutar-analisis" disabled>
                     <ion-icon name="bar-chart-outline"></ion-icon> EJECUTAR ANÁLISIS CLÍNICO <ion-icon name="arrow-forward-outline"></ion-icon>
                 </button>
                 <p id="helper-submit-text" class="foot-helper-text">Por favor complete todos los campos obligatorios para desbloquear el análisis.</p>
@@ -191,6 +204,6 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <script src="scripts.js"></script>
+    <script src="{{ url_for('static', filename='js/evaluacion.js') }}"></script>
 </body>
 </html>

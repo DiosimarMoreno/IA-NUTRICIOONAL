@@ -4,9 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriExpert - Sistema Experto Clínico</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+    <style>
+        .flash-contenedor {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+            max-width: 500px; width: 90%;
+        }
+        .flash-mensaje {
+            padding: 14px 20px; border-radius: 10px; font-size: 14px;
+            font-weight: 600; text-align: center; animation: fadeIn 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .flash-success { background: #00e676; color: #0a0e1a; }
+        .flash-error { background: #ff1744; color: #fff; }
+        .flash-info { background: #2979ff; color: #fff; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <div id="vista-landing" class="vista">
         <nav>
@@ -135,12 +161,13 @@
                     <button class="tab-btn active">👤 Registrarse</button>
                 </div>
 
-                <form id="form-registro">
+                <form id="form-registro" method="POST" action="{{ url_for('auth.register') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="input-group">
                         <label>NOMBRE COMPLETO</label>
                         <div class="input-with-icon">
                             <span class="icon">👤</span>
-                            <input type="text" placeholder="Juan García" required>
+                            <input type="text" name="nombre" placeholder="Juan García" required>
                         </div>
                     </div>
 
@@ -148,7 +175,7 @@
                         <label>CORREO ELECTRÓNICO</label>
                         <div class="input-with-icon">
                             <span class="icon">✉</span>
-                            <input type="email" placeholder="juan@email.com" required>
+                            <input type="email" name="correo" placeholder="juan@email.com" required>
                         </div>
                     </div>
 
@@ -157,14 +184,14 @@
                             <label>EDAD</label>
                             <div class="input-with-icon">
                                 <span class="icon">📅</span>
-                                <input type="number" placeholder="24" min="1" max="120" required>
+                                <input type="number" name="edad" placeholder="24" min="1" max="120" required>
                             </div>
                         </div>
                         <div class="input-group">
                             <label>SEXO</label>
                             <div class="input-with-icon">
                                 <span class="icon">🧬</span>
-                                <select required>
+                                <select name="sexo" required>
                                     <option value="" disabled selected hidden>Selecciona</option>
                                     <option value="M">Masculino</option>
                                     <option value="F">Femenino</option>
@@ -178,7 +205,7 @@
                         <label>CONTRASEÑA</label>
                         <div class="input-with-icon">
                             <span class="icon">🔒</span>
-                            <input type="password" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                            <input type="password" name="contrasena" placeholder="Mínimo 6 caracteres" minlength="6" required>
                         </div>
                     </div>
 
@@ -218,12 +245,13 @@
                     <button class="tab-btn ir-a-registro">👤 Registrarse</button>
                 </div>
 
-                <form id="form-login">
+                <form id="form-login" method="POST" action="{{ url_for('auth.login') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="input-group">
                         <label>CORREO ELECTRÓNICO</label>
                         <div class="input-with-icon">
                             <span class="icon">✉</span>
-                            <input type="email" placeholder="juan@email.com" required>
+                            <input type="email" name="correo" placeholder="juan@email.com" required>
                         </div>
                     </div>
 
@@ -231,7 +259,7 @@
                         <label>CONTRASEÑA</label>
                         <div class="input-with-icon">
                             <span class="icon">🔒</span>
-                            <input type="password" placeholder="Tu contraseña" required>
+                            <input type="password" name="contrasena" placeholder="Tu contraseña" required>
                         </div>
                     </div>
 
@@ -242,6 +270,6 @@
         </div>
     </div>
 </div>
-    <script src="scripts.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
