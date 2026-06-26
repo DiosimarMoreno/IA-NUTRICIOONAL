@@ -66,3 +66,12 @@ def resultados(id):
         return 'Acceso denegado', 403
     resultados_dict = json.loads(ev.resultados) if ev.resultados else {}
     return render_template('dashboard/resultados.html', evaluacion=ev, r=resultados_dict)
+
+@dashboard_bp.route('/plan-accion/<int:id>')
+@login_required
+def plan_accion(id):
+    ev = Evaluacion.query.get_or_404(id)
+    if ev.usuario_id != current_user.id:
+        return 'Acceso denegado', 403
+    resultados_dict = json.loads(ev.resultados) if ev.resultados else {}
+    return render_template('dashboard/plan_accion.html', evaluacion=ev, r=resultados_dict)

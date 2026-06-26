@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - Plan de Acción Personalizado</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/plan_accion.css')}}">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <nav class="navbar-superior">
+        <div class="logo-container-exact">
+            <div class="logo-square-icon">
+                <ion-icon name="pulse-outline"></ion-icon>
+            </div>
+            <div class="logo-text-gradient">NUTRIEXPERT</div>
+        </div>
+        
+        <div class="nav-links-centro">
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link-item">📊 Panel Principal</a>
+            <a href="{{ url_for('dashboard.index') }}" class="nav-link-item">📈 Mi Historial</a>
+        </div>
+
+        <div class="nav-actions-derecha">
+            <div class="user-profile-wrapper">
+                <div class="user-avatar-initial">{{ current_user.nombre[0] | upper }}</div>
+                <span class="user-name-text">{{ current_user.nombre | lower }}</span>
+            </div>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-logout-top">
+                    <ion-icon name="exit-outline"></ion-icon> Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <section class="banner-plan-accion">
+        <img src="{{ url_for('static', filename='img/entrenamiento.jpg') }}" alt="Fondo Plan" class="banner-img-bg">
+        <div class="banner-plan-content">
+            <a href="{{ url_for('dashboard.resultados', id=evaluacion.id) }}" class="link-volver">
+                <ion-icon name="chevron-back-outline"></ion-icon> Resultados
+            </a>
+            <h1 class="plan-main-title">PLAN DE ACCIÓN PERSONALIZADO</h1>
+        </div>
+    </section>
+
+    <div class="plan-main-container" id="plan-main-container">
+        
+        <!-- Tarjetas de resumen -->
+        <div class="resumen-cards-row">
+            <div class="resumen-card">
+                <div class="resumen-valor resumen-naranja" id="calorias-objetivo">{{ r.calorias_objetivo or '2000' }} kcal</div>
+                <div class="resumen-descripcion">Calorías objetivo diarias</div>
+            </div>
+            <div class="resumen-card">
+                <div class="resumen-valor resumen-morado" id="proteina-diaria">{{ r.proteina_g or '150' }}g</div>
+                <div class="resumen-descripcion">Proteína diaria recomendada</div>
+            </div>
+            <div class="resumen-card">
+                <div class="resumen-valor resumen-naranja" id="frecuencia-entrenamiento">6 días</div>
+                <div class="resumen-descripcion">Fuencia semanal de entrenamiento</div>
+            </div>
+        </div>
+
+        <!-- Selector de pestañas -->
+        <div class="tabs-container" id="tabs-container">
+            <div class="segmented-control" id="segmented-control">
+                <button class="tab-button tab-active" data-tab="nutricional" id="tab-nutricional">
+                    Plan Nutricional
+                </button>
+                <button class="tab-button tab-inactive" data-tab="entrenamiento" id="tab-entrenamiento">
+                    Plan de Entrenamiento
+                </button>
+            </div>
+        </div>
+
+        <!-- Encabezado de planificación -->
+        <div class="planificacion-header" id="header-nutricional">
+            <div class="header-line"></div>
+            <h2 class="planificacion-title">PLANIFICACIÓN DIETÉTICA · 6 COMIDAS/DÍA</h2>
+        </div>
+
+        <!-- Grid de comidas -->
+        <div class="comidas-grid" id="grid-comidas" style="display: grid;">
+            <!-- Desayuno -->
+            <div class="comida-card" id="comida-desayuno">
+                <div class="comida-header">
+                    <div class="comida-header-left">
+                        <ion-icon name="restaurant-outline" class="comida-icon"></ion-icon>
+                        <span class="comida-nombre">Desayuno</span>
+                    </div>
+                    <div class="comida-header-right">
+                        <div class="comida-hora">
+                            <ion-icon name="time-outline" class="hora-icon"></ion-icon>
+                            <span id="hora-desayuno">7:00 AM</span>
+                        </div>
+                        <div class="caloria-badge">
+                            <span id="calorias-desayuno">{{ (r.calorias_objetivo or 2000) * 0.25 | round(0) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comida-alimentos" id="alimentos-desayuno">
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">3 huevos revueltos con espinacas</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 rebanada de pan integral</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1/2 aguacate</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">Café negro o té sin azúcar</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snack AM -->
+            <div class="comida-card" id="comida-snack-am">
+                <div class="comida-header">
+                    <div class="comida-header-left">
+                        <ion-icon name="nutrition-outline" class="comida-icon"></ion-icon>
+                        <span class="comida-nombre">Snack AM</span>
+                    </div>
+                    <div class="comida-header-right">
+                        <div class="comida-hora">
+                            <ion-icon name="time-outline" class="hora-icon"></ion-icon>
+                            <span id="hora-snack-am">10:00 AM</span>
+                        </div>
+                        <div class="caloria-badge">
+                            <span id="calorias-snack-am">{{ (r.calorias_objetivo or 2000) * 0.08 | round(0) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comida-alimentos" id="alimentos-snack-am">
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 puñado de almendras (30g)</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 manzana verde</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Almuerzo -->
+            <div class="comida-card" id="comida-almuerzo">
+                <div class="comida-header">
+                    <div class="comida-header-left">
+                        <ion-icon name="restaurant-outline" class="comida-icon"></ion-icon>
+                        <span class="comida-nombre">Almuerzo</span>
+                    </div>
+                    <div class="comida-header-right">
+                        <div class="comida-hora">
+                            <ion-icon name="time-outline" class="hora-icon"></ion-icon>
+                            <span id="hora-almuerzo">1:00 PM</span>
+                        </div>
+                        <div class="caloria-badge">
+                            <span id="calorias-almuerzo">{{ (r.calorias_objetivo or 2000) * 0.30 | round(0) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comida-alimentos" id="alimentos-almuerzo">
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">200g de pechuga de pollo</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 taza de arroz integral</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">Ensalada mixta con aceite de oliva</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1/2 taza de frijoles</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snack PM -->
+            <div class="comida-card" id="comida-snack-pm">
+                <div class="comida-header">
+                    <div class="comida-header-left">
+                        <ion-icon name="nutrition-outline" class="comida-icon"></ion-icon>
+                        <span class="comida-nombre">Snack PM</span>
+                    </div>
+                    <div class="comida-header-right">
+                        <div class="comida-hora">
+                            <ion-icon name="time-outline" class="hora-icon"></ion-icon>
+                            <span id="hora-snack-pm">4:00 PM</span>
+                        </div>
+                        <div class="caloria-badge">
+                            <span id="calorias-snack-pm">{{ (r.calorias_objetivo or 2000) * 0.08 | round(0) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comida-alimentos" id="alimentos-snack-pm">
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 batido de proteína</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 plátano</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cena -->
+            <div class="comida-card" id="comida-cena">
+                <div class="comida-header">
+                    <div class="comida-header-left">
+                        <ion-icon name="restaurant-outline" class="comida-icon"></ion-icon>
+                        <span class="comida-nombre">Cena</span>
+                    </div>
+                    <div class="comida-header-right">
+                        <div class="comida-hora">
+                            <ion-icon name="time-outline" class="hora-icon"></ion-icon>
+                            <span id="hora-cena">7:00 PM</span>
+                        </div>
+                        <div class="caloria-badge">
+                            <span id="calorias-cena">{{ (r.calorias_objetivo or 2000) * 0.25 | round(0) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comida-alimentos" id="alimentos-cena">
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">150g de salmón al horno</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 taza de brócoli al vapor</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 batata pequeña</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snack Nocturno -->
+            <div class="comida-card" id="comida-snack-nocturno">
+                <div class="comida-header">
+                    <div class="comida-header-left">
+                        <ion-icon name="nutrition-outline" class="comida-icon"></ion-icon>
+                        <span class="comida-nombre">Snack Nocturno</span>
+                    </div>
+                    <div class="comida-header-right">
+                        <div class="comida-hora">
+                            <ion-icon name="time-outline" class="hora-icon"></ion-icon>
+                            <span id="hora-snack-nocturno">9:30 PM</span>
+                        </div>
+                        <div class="caloria-badge">
+                            <span id="calorias-snack-nocturno">{{ (r.calorias_objetivo or 2000) * 0.04 | round(0) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comida-alimentos" id="alimentos-snack-nocturno">
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1/2 taza de queso cottage</span>
+                    </div>
+                    <div class="alimento-item">
+                        <span class="alimento-bullet"></span>
+                        <span class="alimento-texto">1 cucharada de miel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Encabezado de entrenamiento -->
+        <div class="entrenamiento-header" id="header-entrenamiento" style="display: none;">
+            <div class="header-line header-line-naranja" id="header-line-entrenamiento"></div>
+            <h2 class="entrenamiento-title" id="titulo-entrenamiento">CIRCUITO METABÓLICO + HIIT · 5 DÍAS / SEMANA</h2>
+        </div>
+
+        <!-- Selector de días de entrenamiento -->
+        <div class="dias-selector" id="dias-selector" style="display: none;">
+            <button class="dia-button dia-activo" data-dia="lunes" id="dia-lunes">Lunes</button>
+            <button class="dia-button" data-dia="martes" id="dia-martes">Martes</button>
+            <button class="dia-button" data-dia="miercoles" id="dia-miercoles">Miércoles</button>
+            <button class="dia-button" data-dia="jueves" id="dia-jueves">Jueves</button>
+            <button class="dia-button" data-dia="viernes" id="dia-viernes">Viernes</button>
+        </div>
+
+        <!-- Tarjeta de rutina del día -->
+        <div class="rutina-card" id="rutina-card" style="display: none;">
+            <div class="rutina-header" id="rutina-header">
+                <div class="rutina-header-left" id="rutina-header-left">
+                    <ion-icon name="barbell-outline" class="rutina-icon" id="rutina-icon"></ion-icon>
+                    <div class="rutina-titulo-info" id="rutina-titulo-info">
+                        <span class="rutina-dia" id="rutina-dia-titulo">Lunes</span>
+                        <span class="rutina-descripcion" id="rutina-descripcion">Full Body — Resistencia Metabólica</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rutina-table-container" id="rutina-table-container">
+                <table class="rutina-table" id="rutina-table">
+                    <thead id="rutina-thead">
+                        <tr>
+                            <th class="col-numero">#</th>
+                            <th class="col-ejercicio">EJERCICIO</th>
+                            <th class="col-series">SERIES × REPS</th>
+                            <th class="col-descanso">DESCANSO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rutina-table-body">
+                        <tr id="ejercicio-1">
+                            <td class="col-numero">01</td>
+                            <td class="col-ejercicio">Sentadilla + Press Militar</td>
+                            <td class="col-series">4 × 12</td>
+                            <td class="col-descanso">90s</td>
+                        </tr>
+                        <tr id="ejercicio-2">
+                            <td class="col-numero">02</td>
+                            <td class="col-ejercicio">Remo + Curl de Bíceps</td>
+                            <td class="col-series">4 × 10</td>
+                            <td class="col-descanso">60s</td>
+                        </tr>
+                        <tr id="ejercicio-3">
+                            <td class="col-numero">03</td>
+                            <td class="col-ejercicio">Zancadas con Mancuernas</td>
+                            <td class="col-series">3 × 12</td>
+                            <td class="col-descanso">75s</td>
+                        </tr>
+                        <tr id="ejercicio-4">
+                            <td class="col-numero">04</td>
+                            <td class="col-ejercicio">Push-ups explosivos</td>
+                            <td class="col-series">3 × 15</td>
+                            <td class="col-descanso">45s</td>
+                        </tr>
+                        <tr id="ejercicio-5">
+                            <td class="col-numero">05</td>
+                            <td class="col-ejercicio">Plancha abdominal</td>
+                            <td class="col-series">3 × 45s</td>
+                            <td class="col-descanso">30s</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recomendación de entrenamiento -->
+        <div class="recomendacion-entrenamiento-card" id="recomendacion-entrenamiento" style="display: none;">
+            <div class="recomendacion-content" id="recomendacion-content">
+                <div class="recomendacion-header" id="recomendacion-header">
+                    <ion-icon name="trending-up-outline" class="recomendacion-icon" id="recomendacion-icon"></ion-icon>
+                    <h3 class="recomendacion-titulo" id="recomendacion-titulo">Principio de Sobrecarga Progresiva</h3>
+                </div>
+                <p class="recomendacion-texto" id="recomendacion-texto">
+                    Este circuito está diseñado para maximizar el gasto calórico mediante ejercicios compuestos que trabajan múltiples grupos musculares simultáneamente. 
+                    Aumenta progresivamente el peso o las repeticiones cada semana para continuar estimulando la adaptación metabólica. 
+                    Mantén los tiempos de descanso cortos para mantener elevada la frecuencia cardíaca y optimizar la quema de grasa durante y después del entrenamiento.
+                </p>
+            </div>
+        </div>
+
+        <!-- Nota clínica -->
+        <div class="nota-clinica-card" id="nota-clinica">
+            <div class="nota-clinica-content">
+                <div class="nota-clinica-header">
+                    <ion-icon name="shield-checkmark-outline" class="nota-icon"></ion-icon>
+                    <h3 class="nota-titulo">Nota clínica — Adaptación progresiva</h3>
+                </div>
+                <p class="nota-texto" id="texto-nota-clinica">
+                    Este plan nutricional ha sido diseñado para optimizar tu composición corporal según tu objetivo de {{ r.objetivo_etiqueta or 'mantenimiento' }}. 
+                    Las porciones y distribución de macronutrientes están calculadas para cubrir tus requerimientos energéticos diarios de {{ r.calorias_objetivo or '2000' }} kcal.
+                    Se recomienda seguir este plan por un mínimo de 4 semanas para observar cambios significativos. Ajusta las cantidades según tu respuesta individual y consulta con un profesional si experimentas cualquier malestar.
+                </p>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="botones-accion-row" id="botones-accion">
+            <a href="{{ url_for('dashboard.index') }}" class="btn-principal" id="btn-dashboard">
+                <ion-icon name="grid-outline" class="btn-icon"></ion-icon>
+                IR AL DASHBOARD
+            </a>
+            <a href="{{ url_for('dashboard.resultados', id=evaluacion.id) }}" class="btn-secundario" id="btn-resultados">
+                <ion-icon name="eye-outline" class="btn-icon"></ion-icon>
+                Ver resultados
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // Funcionalidad de pestañas
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const headerNutricional = document.getElementById('header-nutricional');
+        const headerEntrenamiento = document.getElementById('header-entrenamiento');
+        const gridComidas = document.getElementById('grid-comidas');
+        const diasSelector = document.getElementById('dias-selector');
+        const rutinaCard = document.getElementById('rutina-card');
+        const recomendacionEntrenamiento = document.getElementById('recomendacion-entrenamiento');
+        const notaClinica = document.getElementById('nota-clinica');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.getAttribute('data-tab');
+                
+                // Actualizar estilos de pestañas
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('tab-active', 'tab-activa-naranja');
+                    btn.classList.add('tab-inactive');
+                });
+                
+                if (tab === 'nutricional') {
+                    button.classList.remove('tab-inactive');
+                    button.classList.add('tab-active');
+                    
+                    // Mostrar contenido nutricional
+                    headerNutricional.style.display = 'flex';
+                    headerEntrenamiento.style.display = 'none';
+                    gridComidas.style.display = 'grid';
+                    diasSelector.style.display = 'none';
+                    rutinaCard.style.display = 'none';
+                    recomendacionEntrenamiento.style.display = 'none';
+                    notaClinica.style.display = 'block';
+                } else {
+                    button.classList.remove('tab-inactive');
+                    button.classList.add('tab-activa-naranja');
+                    
+                    // Mostrar contenido entrenamiento
+                    headerNutricional.style.display = 'none';
+                    headerEntrenamiento.style.display = 'flex';
+                    gridComidas.style.display = 'none';
+                    diasSelector.style.display = 'flex';
+                    rutinaCard.style.display = 'block';
+                    recomendacionEntrenamiento.style.display = 'block';
+                    notaClinica.style.display = 'none';
+                }
+            });
+        });
+
+        // Funcionalidad de selector de días
+        const diaButtons = document.querySelectorAll('.dia-button');
+        const rutinaDiaTitulo = document.getElementById('rutina-dia-titulo');
+        
+        const rutinasPorDia = {
+            lunes: {
+                titulo: 'Lunes',
+                descripcion: 'Full Body — Resistencia Metabólica',
+                ejercicios: [
+                    { numero: '01', nombre: 'Sentadilla + Press Militar', series: '4 × 12', descanso: '90s' },
+                    { numero: '02', nombre: 'Remo + Curl de Bíceps', series: '4 × 10', descanso: '60s' },
+                    { numero: '03', nombre: 'Zancadas con Mancuernas', series: '3 × 12', descanso: '75s' },
+                    { numero: '04', nombre: 'Push-ups explosivos', series: '3 × 15', descanso: '45s' },
+                    { numero: '05', nombre: 'Plancha abdominal', series: '3 × 45s', descanso: '30s' }
+                ]
+            },
+            martes: {
+                titulo: 'Martes',
+                descripcion: 'Cardio HIIT — Intensidad Alta',
+                ejercicios: [
+                    { numero: '01', nombre: 'Sprints en intervalos', series: '8 × 30s', descanso: '60s' },
+                    { numero: '02', nombre: 'Burpees', series: '4 × 15', descanso: '45s' },
+                    { numero: '03', nombre: 'Saltos de tijera', series: '3 × 20', descanso: '30s' },
+                    { numero: '04', nombre: 'Mountain Climbers', series: '3 × 30s', descanso: '30s' },
+                    { numero: '05', nombre: 'Jump Rope', series: '3 × 60s', descanso: '45s' }
+                ]
+            },
+            miercoles: {
+                titulo: 'Miércoles',
+                descripcion: 'Fuerza — Tren Superior',
+                ejercicios: [
+                    { numero: '01', nombre: 'Press de Banca', series: '4 × 10', descanso: '90s' },
+                    { numero: '02', nombre: 'Dominadas', series: '4 × 8', descanso: '75s' },
+                    { numero: '03', nombre: 'Press Arnold', series: '3 × 12', descanso: '60s' },
+                    { numero: '04', nombre: 'Elevaciones laterales', series: '3 × 15', descanso: '45s' },
+                    { numero: '05', nombre: 'Face Pulls', series: '3 × 12', descanso: '45s' }
+                ]
+            },
+            jueves: {
+                titulo: 'Jueves',
+                descripcion: 'Cardio Moderado — Recuperación Activa',
+                ejercicios: [
+                    { numero: '01', nombre: 'Caminata inclinada', series: '1 × 30min', descanso: '—' },
+                    { numero: '02', nombre: 'Elíptica', series: '1 × 20min', descanso: '—' },
+                    { numero: '03', nombre: 'Ciclismo ligero', series: '1 × 25min', descanso: '—' },
+                    { numero: '04', nombre: 'Natación suave', series: '1 × 15min', descanso: '—' },
+                    { numero: '05', nombre: 'Estiramientos dinámicos', series: '1 × 10min', descanso: '—' }
+                ]
+            },
+            viernes: {
+                titulo: 'Viernes',
+                descripcion: 'Fuerza — Tren Inferior',
+                ejercicios: [
+                    { numero: '01', nombre: 'Peso Muerto', series: '4 × 8', descanso: '120s' },
+                    { numero: '02', nombre: 'Prensa de piernas', series: '4 × 12', descanso: '90s' },
+                    { numero: '03', nombre: 'Extensiones de cuádriceps', series: '3 × 15', descanso: '60s' },
+                    { numero: '04', nombre: 'Curl femoral', series: '3 × 12', descanso: '60s' },
+                    { numero: '05', nombre: 'Elevación de gemelos', series: '4 × 20', descanso: '45s' }
+                ]
+            }
+        };
+
+        diaButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const dia = button.getAttribute('data-dia');
+                const rutina = rutinasPorDia[dia];
+                
+                // Actualizar estilos de botones
+                diaButtons.forEach(btn => {
+                    btn.classList.remove('dia-activo');
+                });
+                button.classList.add('dia-activo');
+                
+                // Actualizar contenido de la rutina
+                if (rutina) {
+                    rutinaDiaTitulo.textContent = rutina.titulo;
+                    document.querySelector('.rutina-descripcion').textContent = rutina.descripcion;
+                    
+                    const tableBody = document.getElementById('rutina-table-body');
+                    tableBody.innerHTML = '';
+                    
+                    rutina.ejercicios.forEach(ejercicio => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="col-numero">${ejercicio.numero}</td>
+                            <td class="col-ejercicio">${ejercicio.nombre}</td>
+                            <td class="col-series">${ejercicio.series}</td>
+                            <td class="col-descanso">${ejercicio.descanso}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
