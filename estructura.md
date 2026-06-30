@@ -19,9 +19,9 @@ Dos tipos de usuario:
 | Backend | Python / Flask |
 | Frontend | HTML + CSS + JavaScript vanilla |
 | Base de datos | SQLite (SQLAlchemy ORM) |
-| Plantillas | Jinja2 (server-side) |
+| Plantillas | Jinja2 (server-side render) |
 | Autenticación | Flask-Login (sesiones con cookies) |
-| Contraseñas | bcrypt |
+| Contraseñas | werkzeug.security (pbkdf2:sha256) |
 
 ---
 
@@ -36,63 +36,70 @@ IA-NUTRICIOONAL/
 ├── .gitignore
 │
 ├── app/                   # Código principal de Flask
-│   ├── __init__.py        # Fábrica create_app()
+│   ├── __init__.py        # Fábrica create_app() + comando init-db
 │   ├── config.py          # Configuración desde .env
 │   ├── extensions.py      # db, login_manager, migrate, csrf
 │   ├── models.py          # Modelos: User, Evaluacion
 │   │
 │   ├── main/              # Blueprint público
 │   │   ├── __init__.py
-│   │   └── routes.py      # / → Página principal (landing + login/register)
+│   │   └── routes.py      # GET / → home.html (landing + login/register)
 │   │
 │   ├── auth/              # Blueprint de autenticación
 │   │   ├── __init__.py
-│   │   └── routes.py      # /auth/api/login, /auth/api/register, /auth/api/logout
+│   │   └── routes.py      # POST /auth/login, /auth/register, /auth/logout
 │   │
 │   ├── dashboard/         # Blueprint del usuario común
 │   │   ├── __init__.py
-│   │   └── routes.py      # /dashboard, /dashboard/evaluar, /dashboard/resultados/<id>
+│   │   └── routes.py      # /dashboard, /dashboard/evaluar,
+│   │                      # /dashboard/resultados/<id>, /dashboard/plan-accion/<id>
 │   │
 │   ├── nutritionist/      # Blueprint del nutricionista
 │   │   ├── __init__.py
-│   │   └── routes.py      # /nutritionist, /nutritionist/pacientes
+│   │   └── routes.py      # /nutritionist, /nutritionist/patients
 │   │
-│   ├── services/          # Lógica de negocio (no son rutas)
-│   │   ├── __init__.py
-│   │   ├── clinical.py    # IMC, somatotipo, agua corporal, etc.
-│   │   └── nutrition.py   # TMB, calorías objetivo, macronutrientes
+│   ├── services/          # Motor clínico (sistema experto)
+│   │   ├── __init__.py              # ejecutar_analisis() — orquestador
+│   │   ├── clinical_knowledge.py    # Fórmulas clínicas (IMC, Devine, Watson, etc.)
+│   │   ├── nutritional_knowledge.py # Fórmulas nutricionales (TMB, macros, etc.)
+│   │   ├── evaluation_schema.py     # Dataclass ResultadoEvaluacion
+│   │   ├── inference_engine.py      # Motor forward-chaining
+│   │   └── knowledge_base.py        # 40 reglas clínicas en 6 módulos
 │   │
 │   └── templates/         # Plantillas Jinja2
 │       ├── main/
-│       │   └── home.html          # Landing + login + register (todo en uno)
+│       │   └── home.html            # Landing + login + register (3 vistas con JS)
 │       ├── dashboard/
-│       │   ├── index.html         # Panel del usuario (historial)
-│       │   ├── evaluacion.html    # Formulario de evaluación clínica
-│       │   └── resultados.html    # Informe de resultados
+│       │   ├── index.html           # Panel del usuario (perfil + historial)
+│       │   ├── evaluacion.html      # Formulario de 4 pasos
+│       │   ├── resultados.html      # Informe completo de resultados
+│       │   └── plan_accion.html     # Plan de acción personalizado
 │       └── nutritionist/
-│           └── index.html         # Panel del nutricionista
+│           ├── index.html           # Panel del nutricionista (placeholder)
+│           └── patients.html        # Lista de pacientes (placeholder)
 │
-│   ├── static/             # Archivos estáticos servidos por Flask
-│   ├── css/
-│   │   ├── styles.css       # Estilos de la landing
-│   │   ├── evaluacion.css   # Estilos del formulario
-│   │   ├── resultados.css   # Estilos del informe
-│   │   └── cuenta.css       # Estilos del panel de usuario
-│   ├── js/
-│   │   ├── auth.js          # Login, registro, logout
-│   │   ├── evaluation.js    # Validación y envío del formulario
-│   │   ├── resultados.js    # Renderizado de resultados en DOM
-│   │   └── utils.js         # Funciones auxiliares
-│   └── img/                 # Imágenes del frontend
-│       ├── login_nombre.jpg
-│       ├── entrenamiento.jpg
-│       └── ...
+│   └── static/             # Archivos estáticos
+│       ├── css/
+│       │   ├── styles.css       # Estilos de la landing
+│       │   ├── cuenta.css       # Estilos del panel de usuario
+│       │   ├── evaluacion.css   # Estilos del formulario
+│       │   ├── resultados.css   # Estilos del informe
+│       │   └── plan_accion.css  # Estilos del plan de acción
+│       ├── js/
+│       │   ├── app.js           # Navegación entre vistas (landing/login/register)
+│       │   └── evaluacion.js    # Validación en vivo del formulario
+│       └── img/                 # Imágenes
+│           ├── login_nombre.jpg
+│           ├── campos.jpg
+│           ├── entrenamiento.jpg
+│           ├── evaluacion.jpg
+│           ├── nutricion.jpg
+│           ├── progreso.jpg
+│           └── resultados.jpg
 │
-├── instance/              # Base de datos SQLite (se crea sola)
-│   └── nutriexpert.db
-│
-└── server-api-docs.md     # Documentación de la API antigua (Node.js)
-                            # para referencia durante la migración
+└── instance/              # Base de datos SQLite (se crea sola al iniciar)
+    └── nutriexpert.db
+
 ```
 
 ---
@@ -103,37 +110,40 @@ IA-NUTRICIOONAL/
 
 ```
 1. Landing (/) → El usuario ve la página principal
-   └── Se registra o inicia sesión (todo en la misma página,
-       secciones ocultas que se muestran con JS)
+   └── Se registra o inicia sesión (tres vistas intercambiables con JS)
 
-2. Dashboard (/dashboard) → Panel con historial de evaluaciones
+2. Dashboard (/dashboard) → Panel con perfil e historial de evaluaciones
    └── Botón "Nueva Evaluación" → formulario clínico
 
 3. Evaluación (/dashboard/evaluar) → Formulario con 4 pasos:
-   01. Datos personales (estatura, peso)
+   01. Datos personales (estatura, peso, edad, sexo)
    02. Composición corporal (% grasa, opcional)
    03. Nivel de actividad física
    04. Objetivo principal
-   └── JS valida campos y envía POST a /dashboard/api/evaluar
+   └── JS valida campos requeridos antes de habilitar el envío
+   └── POST /dashboard/evaluar → procesa con motor clínico
 
 4. Resultados (/dashboard/resultados/<id>) → Informe completo:
    - Parámetros introducidos
-   - IMC + clasificación
-   - Peso ideal + rango saludable
+   - IMC + clasificación OMS
+   - Peso ideal (Devine) + rango saludable
    - Somatotipo estimado
    - Masa grasa + masa magra
-   - Agua corporal (fórmula de Watson)
+   - Agua corporal total (Watson)
    - TMB (Mifflin-St Jeor)
-   - Calorías objetivo
+   - Gasto energético total (x factor actividad)
+   - Calorías objetivo (según meta)
    - Distribución de macronutrientes (proteínas, carbohidratos, grasas)
+   - Riesgo metabólico y nutricional
+   - Nota clínica y recomendaciones
 ```
 
 ### Flujo del nutricionista
 
 ```
 1. Login como nutritionist → /nutritionist
-2. Ve lista de pacientes
-3. Puede ver los resultados de evaluación de cada paciente
+2. Ve panel con opciones
+3. Puede ver lista de pacientes (próximamente)
 ```
 
 ---
@@ -142,19 +152,19 @@ IA-NUTRICIOONAL/
 
 | Blueprint | Prefijo URL | ¿Qué hace? |
 |---|---|---|
-| `main` | `/` | Página principal (landing) |
-| `auth` | `/auth` | API de login/register/logout (JSON) |
+| `main` | `/` | Página principal (landing + login/register) |
+| `auth` | `/auth` | Rutas de autenticación (login, register, logout) |
 | `dashboard` | `/dashboard` | Panel del usuario común |
 | `nutritionist` | `/nutritionist` | Panel del nutricionista |
 
-Cada blueprint está en su propia carpeta con `__init__.py` y `routes.py`.
-Las rutas que devuelven JSON tienen `/api/` en su path.
+Todas las rutas usan formularios HTML con POST y redireccionan.
+No hay API JSON. La protección CSRF está activa globalmente.
 
 ---
 
 ## Base de datos (SQLAlchemy)
 
-### Modelo `User`
+### Modelo `User` (tabla `usuarios`)
 
 | Columna | Tipo | Detalle |
 |---|---|---|
@@ -163,49 +173,56 @@ Las rutas que devuelven JSON tienen `/api/` en su path.
 | correo | String(100) | Único, usado para login |
 | edad | Integer | |
 | sexo | String(1) | M / F / O |
-| contrasena_hash | String(255) | Hash de bcrypt |
+| contrasena_hash | String(255) | Hash (werkzeug.security) |
 | fecha_registro | DateTime | |
-| role | String(20) | 'user' o 'nutritionist' |
+| role | String(20) | 'user' por defecto, 'nutritionist' |
 
-### Modelo `Evaluacion`
+### Modelo `Evaluacion` (tabla `evaluaciones`)
 
 | Columna | Tipo | Detalle |
 |---|---|---|
 | id | Integer PK | |
-| usuario_id | Integer FK | Relacionado con User |
+| usuario_id | Integer FK | Relacionado con User (cascade delete) |
 | estatura | Float | cm |
 | peso | Float | kg |
 | porcentaje_grasa | Float | Opcional |
-| nivel_actividad | String | Ver factores de actividad |
+| nivel_actividad | String | sedentario / ligero / moderado / intenso / extremo |
 | objetivo_principal | String | hipertrofia / mantenimiento / perdida |
 | resultados | Text (JSON) | Output completo del motor clínico |
 | fecha_registro | DateTime | |
 
 ---
 
-## Servicios (lógica de negocio)
+## Servicios — Motor clínico (sistema experto)
 
-`app/services/` contiene las funciones de cálculo, separadas de las rutas:
+`app/services/` implementa un sistema experto basado en reglas (forward-chaining):
 
-| Archivo | Funciones |
+| Archivo | Descripción |
 |---|---|
-| `clinical.py` | IMC, clasificación OMS, peso ideal (Devine), rango saludable, somatotipo, masa grasa/magra, agua corporal (Watson) |
-| `nutrition.py` | TMB (Mifflin-St Jeor), factor de actividad, calorías objetivo por objetivo, distribución de macros |
-| `__init__.py` | Función `ejecutar_analisis(datos)` que orquesta todo |
+| `knowledge_base.py` | 40 reglas clínicas con factores de certeza, organizadas en 6 módulos |
+| `inference_engine.py` | Motor de inferencia que dispara reglas por etapas |
+| `clinical_knowledge.py` | Fórmulas clínicas: IMC, Devine, Watson, Deurenberg, somatotipo |
+| `nutritional_knowledge.py` | Fórmulas nutricionales: Mifflin-St Jeor, macros, actividad |
+| `evaluation_schema.py` | Dataclass `ResultadoEvaluacion` con 26 campos calculados |
+| `__init__.py` | `ejecutar_analisis(datos)` — orquesta el motor completo |
 
-No dependen de Flask ni de la base de datos — son funciones puras
-que reciben datos y devuelven resultados.
+### Etapas del motor de inferencia
+
+1. **validacion** — verifica datos de entrada
+2. **antropometrico** — IMC, clasificación OMS, peso ideal, somatotipo, agua
+3. **metabolico** — TMB, factor de actividad
+4. **adaptacion** — calorías objetivo según meta
+5. **prescripcion** — distribución de macronutrientes
+6. **riesgos** — riesgo metabólico/nutricional, alertas, nota clínica
 
 ---
 
 ## Frontend
 
 - **HTML** → Jinja2 templates en `app/templates/`
-- **CSS** → Archivos separados en `static/css/`
-- **JS** → Archivos separados en `static/js/`
-
-El frontend se comunica con el backend mediante `fetch()` a las rutas
-`/auth/api/*` y `/dashboard/api/*`, que devuelven JSON.
+- **CSS** → Archivos separados en `static/css/` por sección
+- **JS** → `app.js` (navegación entre vistas) y `evaluacion.js` (validación de formulario)
+- **Imágenes** → `static/img/`
 
 Las rutas HTML se cargan con `url_for('dashboard.index')` y los
 archivos estáticos con `url_for('static', filename='css/...')`.
@@ -217,7 +234,7 @@ archivos estáticos con `url_for('static', filename='css/...')`.
 | role | Acceso |
 |---|---|
 | `user` | `/dashboard/*` — evaluaciones y resultados propios |
-| `nutritionist` | `/nutritionist/*` — pacientes y sus evaluaciones |
+| `nutritionist` | `/nutritionist/*` — panel de gestión (en desarrollo) |
 
 El role se asigna al crear el usuario. Por defecto es `user`.
 
@@ -226,7 +243,10 @@ El role se asigna al crear el usuario. Por defecto es `user`.
 ## Cómo ejecutar
 
 ```bash
-# 1. Activar entorno virtual
+# 1. Activar entorno virtual (Windows)
+.\venv\Scripts\Activate.ps1
+
+# Linux/macOS
 source venv/bin/activate
 
 # 2. Inicializar base de datos (solo la primera vez)

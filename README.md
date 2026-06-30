@@ -67,7 +67,7 @@ Distribución personalizada de proteínas, carbohidratos y grasas en gramos y ca
 
 ## Características
 
-- **Autenticación segura** — registro e inicio de sesión con hash de contraseñas (bcrypt) y protección CSRF
+- **Autenticación segura** — registro e inicio de sesión con hash de contraseñas (werkzeug.security) y protección CSRF
 - **Formulario clínico interactivo** — 4 pasos guiados con validación en vivo
 - **Reporte inteligente** — resultados con interpretación de cada indicador y valores de referencia
 - **Historial de evaluaciones** — seguimiento cronológico de tu evolución
@@ -82,7 +82,7 @@ Distribución personalizada de proteínas, carbohidratos y grasas en gramos y ca
 |---|---|
 | Backend | Python 3.12 + Flask 3.1 |
 | Base de datos | SQLite + SQLAlchemy 2.x (ORM) |
-| Autenticación | Flask-Login (sesiones) + bcrypt |
+| Autenticación | Flask-Login (sesiones) + werkzeug.security |
 | Frontend | HTML5 + CSS3 + JavaScript vanilla |
 | Plantillas | Jinja2 |
 | Seguridad | Flask-WTF / CSRFProtect |
@@ -166,7 +166,7 @@ El rol se asigna al crear el usuario; por defecto es `user`.
 - [x] Generación y visualización de reportes
 - [x] Historial de evaluaciones
 - [x] Panel base para nutricionistas
-- [ ] Motor clínico completo con todas las fórmulas
+- [x] Motor clínico completo con todas las fórmulas
 - [ ] Panel funcional de nutricionista con lista de pacientes
 
 ---
