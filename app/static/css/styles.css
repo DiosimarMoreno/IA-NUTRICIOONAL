@@ -393,19 +393,26 @@ nav {
 }
 
 .btn-back {
+    position: absolute;
+    top: 25px;
+    left: 30px;
     background: transparent;
-    border: none;
-    color: var(--texto-gris);
-    font-size: 14px;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    color: var(--verde-mint);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
-    width: fit-content;
-    margin-bottom: 30px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
 
 }
 
 .btn-back:hover {
-    color: #00f2fe;
+    background: rgba(0, 230, 118, 0.1);
+    border-color: var(--verde-mint);
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
     transform: scale(1.05);
 }
 

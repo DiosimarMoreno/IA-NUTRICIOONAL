@@ -12,10 +12,20 @@
             max-width: 500px; width: 90%;
         }
         .flash-mensaje {
-            padding: 14px 20px; border-radius: 10px; font-size: 14px;
+            position: relative;
+            padding: 14px 45px 14px 20px; border-radius: 10px; font-size: 14px;
             font-weight: 600; text-align: center; animation: fadeIn 0.3s;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
+        .flash-cerrar {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #fff;
+            font-size: 20px; cursor: pointer; opacity: 0.6;
+            line-height: 1; padding: 0 4px; border-radius: 4px;
+            transition: opacity 0.2s;
+        }
+        .flash-cerrar:hover { opacity: 1; }
+        .flash-texto { display: inline; }
         .flash-success { background: #00e676; color: #0a0e1a; }
         .flash-error { background: #ff1744; color: #fff; }
         .flash-info { background: #2979ff; color: #fff; }
@@ -28,7 +38,10 @@
     {% if mensajes %}
     <div class="flash-contenedor">
         {% for categoria, mensaje in mensajes %}
-        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        <div class="flash-mensaje flash-{{ categoria }}">
+            <span class="flash-texto">{{ mensaje }}</span>
+            <button class="flash-cerrar">&times;</button>
+        </div>
         {% endfor %}
     </div>
     {% endif %}
@@ -45,7 +58,7 @@
 
         <section class="hero">
             <div class="hero-info">
-                <div class="tag-version">• SISTEMA EXPERTO CLÍNICO v2.4</div>
+                <div class="tag-version">• SISTEMA EXPERTO CLÍNICO</div>
                 <h1>Tu cuerpo,<br><span class="texto-degradado">analizado</span><br>con precisión</h1>
                 <p>Sistema experto nutricional que emula el razonamiento clínico de un nutriólogo profesional. Evaluación antropométrica, diagnóstico personalizado y seguimiento de tu progreso en el tiempo.</p>
                 
@@ -271,5 +284,8 @@
     </div>
 </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+(function(){var c=document.querySelector('.flash-contenedor');if(!c)return;c.addEventListener('click',function(e){if(e.target.classList.contains('flash-cerrar')){c.style.opacity='0';setTimeout(function(){c.remove()},300)}});setTimeout(function(){c.style.opacity='0';setTimeout(function(){c.remove()},300)},5e3)})();
+</script>
 </body>
 </html>

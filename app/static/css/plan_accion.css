@@ -761,13 +761,23 @@ body {
 }
 
 .flash-mensaje {
-    padding: 16px 24px;
+    position: relative;
+    padding: 16px 45px 16px 24px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: 600;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     max-width: 350px;
 }
+.flash-cerrar {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: #fff;
+    font-size: 20px; cursor: pointer; opacity: 0.6;
+    line-height: 1; padding: 0 4px; border-radius: 4px;
+    transition: opacity 0.2s;
+}
+.flash-cerrar:hover { opacity: 1; }
+.flash-texto { display: inline; }
 
 .flash-success {
     background-color: rgba(0, 230, 118, 0.15);

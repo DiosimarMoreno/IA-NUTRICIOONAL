@@ -14,7 +14,10 @@
     {% if mensajes %}
     <div class="flash-contenedor">
         {% for categoria, mensaje in mensajes %}
-        <div class="flash-mensaje flash-{{ categoria }}">{{ mensaje }}</div>
+        <div class="flash-mensaje flash-{{ categoria }}">
+            <span class="flash-texto">{{ mensaje }}</span>
+            <button class="flash-cerrar">&times;</button>
+        </div>
         {% endfor %}
     </div>
     {% endif %}
@@ -551,6 +554,8 @@
             });
         });
     </script>
-
+<script>
+(function(){var c=document.querySelector('.flash-contenedor');if(!c)return;c.addEventListener('click',function(e){if(e.target.classList.contains('flash-cerrar')){c.style.opacity='0';setTimeout(function(){c.remove()},300)}});setTimeout(function(){c.style.opacity='0';setTimeout(function(){c.remove()},300)},5e3)})();
+</script>
 </body>
 </html>
