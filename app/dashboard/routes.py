@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from . import dashboard_bp
 from ..extensions import db
 from ..models import Evaluacion
+from ..services import ejecutar_analisis
 
 @dashboard_bp.route('/')
 @login_required
@@ -29,20 +30,21 @@ def evaluar_post():
         flash('Todos los campos obligatorios deben estar completos.', 'error')
         return redirect(url_for('dashboard.evaluacion'))
 
-    # Placeholder: aquí irá el motor clínico después
-    resultados = {
-        'imc': round(peso / ((estatura / 100) ** 2), 2),
-        'clasificacion_imc': 'Por determinar',
-        'peso_ideal': 0.0,
-        'somatotipo': 'Por determinar',
-        'tmb': 0,
-        'calorias_objetivo': 0,
-        'proteina_g': 0,
-        'carbos_g': 0,
-        'grasas_g': 0,
-        'actividad_etiqueta': nivel_actividad,
-        'objetivo_etiqueta': objetivo_principal,
+    datos = {
+        "estatura": estatura,
+        "peso": peso,
+        "pc_grasa": porcentaje_grasa,
+        "nivel_actividad": nivel_actividad,
+        "objetivo": objetivo_principal,
+        "edad": current_user.edad,
+        "sexo": current_user.sexo,
     }
+
+    resultados = ejecutar_analisis(datos)
+
+    if "error" in resultados:
+        flash(resultados["error"], "error")
+        return redirect(url_for("dashboard.evaluacion"))
 
     ev = Evaluacion(
         usuario_id=current_user.id,
