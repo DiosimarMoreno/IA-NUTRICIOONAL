@@ -144,6 +144,20 @@
                 <button class="btn-evaluation ir-a-registro">Comenzar Evaluación Gratuita →</button>
             </div>
         </section>
+
+        <section class="nutritionist-cta">
+            <div class="nutritionist-cta-container">
+                <div class="nutritionist-cta-content">
+                    <span class="nutritionist-tag">NUTRICIONISTAS</span>
+                    <h2>¿Eres Nutricionista?</h2>
+                    <p>Descubre cómo puedes unirte a nuestro equipo y aprovechar el poder de la IA Experta de NutriExpert para potenciar tu práctica clínica. Realiza evaluaciones precisas, da seguimiento a tus pacientes y obtén reportes automáticos con respaldo científico.</p>
+                    <button class="btn-nutri-register ir-a-registro-nutricionista">👤 Registrarme como Nutricionista</button>
+                </div>
+                <div class="nutritionist-cta-image">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=500" alt="Nutricionista profesional">
+                </div>
+            </div>
+        </section>
     </div>
 
     <div id="vista-registro" class="vista hidden">
@@ -166,7 +180,7 @@
             <button class="btn-back btn-volver-inicio">‹ Volver al inicio</button>
             
             <div class="form-wrapper">
-                <h2>CREAR CUENTA</h2>
+                <h2>CREAR CUENTA <span class="role-badge" id="role-badge">USUARIO</span></h2>
                 <p class="form-subtitle">Únete y comienza tu evaluación clínica gratuita</p>
                 
                 <div class="tab-container">
@@ -176,6 +190,7 @@
 
                 <form id="form-registro" method="POST" action="{{ url_for('auth.register') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="role" value="user" id="role-field">
                     <div class="input-group">
                         <label>NOMBRE COMPLETO</label>
                         <div class="input-with-icon">

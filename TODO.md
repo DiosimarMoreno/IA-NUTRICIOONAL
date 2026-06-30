@@ -58,24 +58,72 @@
 ### H. Motor clínico (sistema experto)
 - [x] `app/services/clinical_knowledge.py` — funciones: `calcular_imc`, `clasificar_imc`, `peso_ideal_devine`, `rango_saludable`, `somatotipo_por_grasa`, `somatotipo_por_imc`, `estimar_grasa_deurenberg`, `masa_grasa_kg`, `masa_magra_kg`, `agua_watson`
 - [x] `app/services/nutritional_knowledge.py` — funciones: `tmb_mifflin_stjeor`, `factor_actividad`, `calorias_objetivo`, `distribuir_macros`
-- [x] `app/services/evaluation_schema.py` — dataclass `ResultadoEvaluacion` con 26 campos + `to_dict()`
+- [x] `app/services/evaluation_schema.py` — dataclass `ResultadoEvaluacion` con 30 campos + `to_dict()`
 - [x] `app/services/inference_engine.py` — motor forward-chaining con disparo por etapas
 - [x] `app/services/knowledge_base.py` — 40 reglas clínicas en 6 módulos (validación, antropométrico, metabólico, adaptación, prescripción, riesgos)
 - [x] `app/services/__init__.py` — `ejecutar_analisis(datos)` orquesta el motor completo
 - [x] `dashboard.routes.evaluar_post` conectado al motor real vía `ejecutar_analisis()`
 
+### I. Protección por roles
+- [x] Decorador `@role_required(role)` en `app/decorators.py`
+- [x] Dashboard protegido con `@role_required('user')` en todas sus rutas
+- [x] Panel nutricionista protegido con `@role_required('nutritionist')` en todas sus rutas
+- [x] Redirects de `auth/login` y `auth/register` según el rol del usuario autenticado
+
 ---
 
 ## 🟡 PENDIENTE
 
-### 1. Historial funcional
-- [ ] Mostrar más datos (clasificación IMC, peso ideal, TMB) en la tarjeta del historial (`dashboard/index.html`)
+### 1. Frontend de usuario — Historial (`dashboard/index.html`)
+- [ ] Mostrar en cada tarjeta: clasificación IMC (con badge de color según OMS), peso ideal (Devine), TMB (kcal), calorías objetivo, somatotipo
+- [ ] Indicador visual de riesgo metabólico (color: verde/amarillo/rojo según `riesgo_metabolico`)
+- [ ] Enlaces directos a "Ver resultados" y "Ver plan de acción" por evaluación
+- [ ] Badge con el objetivo de la evaluación (hipertrofia/mantenimiento/pérdida)
 
-### 2. Panel de nutricionista
-- [ ] Agregar lógica de role: redirigir si `current_user.role != 'nutritionist'`
-- [ ] Mostrar lista real de pacientes con evaluaciones
+### 2. Frontend de usuario — Reporte de resultados (`resultados.html`)
+- [ ] Mostrar `riesgo_metabolico` con badge de alerta (bajo/moderado/alto)
+- [ ] Mostrar `riesgo_nutricional` con indicador visual
+- [ ] Mostrar lista de `alertas` con íconos de advertencia
+- [ ] Mostrar `recomendaciones` numeradas como lista de acción
+- [ ] Mostrar `nota_clinica` como bloque destacado al final del reporte
+- [ ] Mostrar `explicaciones` como sección colapsable (accordion)
+- [ ] Mostrar `factor_actividad` junto a la TMB y el gasto energético total
 
-### 3. Varios menores
-- [ ] Agregar seed de usuario nutricionista (`python seed.py` o comando flask)
+### 3. Frontend de usuario — Plan de acción (`plan_accion.html`)
+- [ ] Reemplazar contenido hardcodeado (comidas, ejercicios, rutinas) con datos reales del motor clínico
+- [ ] Personalizar el plan según `objetivo_etiqueta` (hipertrofia / mantenimiento / pérdida)
+- [ ] Incorporar `recomendaciones` y `nota_clinica` dentro del plan
+- [ ] Mostrar distribución de macros visual (barras de progreso o gráfico)
+
+### 4. Frontend de usuario — Mejoras UX generales
+- [ ] Estado vacío mejorado cuando no hay evaluaciones (icono + mensaje + CTA)
+- [ ] Animaciones de carga/transición entre vistas del dashboard
+- [ ] Diseño responsive para tablets y móviles
+
+### 5. Frontend de nutricionista — Panel principal (`nutritionist/index.html`)
+- [ ] Navbar con logo, nombre del nutricionista, botón de cerrar sesión
+- [ ] Tarjetas de resumen: total pacientes, total evaluaciones, pacientes con riesgo alto
+- [ ] Lista de pacientes con búsqueda por nombre/correo
+- [ ] Cada paciente en lista muestra: nombre, correo, última evaluación (fecha + IMC)
+- [ ] Enlace para ver detalle de cada paciente
+
+### 6. Frontend de nutricionista — Vista de paciente individual
+- [ ] Crear ruta `GET /nutritionist/patient/<int:id>` con template
+- [ ] Mostrar datos del paciente: nombre, edad, sexo, correo, fecha de registro
+- [ ] Historial completo de evaluaciones del paciente
+- [ ] Cada evaluación muestra: fecha, IMC + clasificación OMS, peso, TMB, calorías objetivo
+- [ ] Enlace a reporte completo de cada evaluación
+
+### 7. Frontend de nutricionista — Lista de pacientes (`nutritionist/patients.html`)
+- [ ] Tabla de pacientes con columnas: nombre, correo, cantidad de evaluaciones, última actividad
+- [ ] Paginación si hay más de 20 pacientes
+- [ ] Filtros por rango de fechas y estado de riesgo
+
+### 8. Backend — Rutas de nutricionista
+- [ ] Implementar queries: obtener todos los usuarios con evaluaciones, contar evaluaciones por paciente, obtener última evaluación de cada paciente
+- [ ] Ruta `GET /nutritionist/patient/<int:id>` con datos completos del paciente
+
+### 9. Varios menores
+- [ ] Crear `seed.py` o comando flask para crear usuario nutricionista de prueba
 - [ ] Verificar que `estructura.md` refleje el estado actual
 - [ ] Verificar que `README.md` refleje el estado actual

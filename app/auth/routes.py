@@ -8,6 +8,8 @@ from ..models import User
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
+        if current_user.role == 'nutritionist':
+            return redirect(url_for('nutritionist.index'))
         return redirect(url_for('dashboard.index'))
 
     if request.method == 'POST':
@@ -36,6 +38,8 @@ def login():
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
+        if current_user.role == 'nutritionist':
+            return redirect(url_for('nutritionist.index'))
         return redirect(url_for('dashboard.index'))
 
     if request.method == 'POST':
@@ -59,7 +63,7 @@ def register():
             edad=int(edad),
             sexo=sexo.upper(),
             contrasena_hash=generate_password_hash(contrasena),
-            role='user'
+            role=request.form.get('role', 'user')
         )
         db.session.add(usuario)
         db.session.commit()
