@@ -1,1 +1,203 @@
-<p>Aquí va el index del nutricionista</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - Panel del Nutricionista</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nutricionista.css') }}">
+</head>
+<body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">
+            <span class="flash-texto">{{ mensaje }}</span>
+            <button class="flash-cerrar">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <nav class="navbar-superior">
+        <div class="logo-container-exact">
+            <div class="logo-square-icon">
+                <ion-icon name="pulse-outline"></ion-icon>
+            </div>
+            <div class="logo-text-gradient">NUTRIEXPERT</div>
+        </div>
+
+        <div class="nav-links-centro">
+            <a href="{{ url_for('nutritionist.index') }}" class="nav-link-item active">
+                <ion-icon name="grid-outline"></ion-icon>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="{{ url_for('nutritionist.patients') }}" class="nav-link-item">
+                <ion-icon name="people-outline"></ion-icon>
+                <span class="nav-text">Pacientes</span>
+            </a>
+        </div>
+
+        <div class="nav-actions-derecha">
+            <div class="user-profile-wrapper">
+                <div class="user-avatar-initial">{{ current_user.nombre[0] | upper }}</div>
+                <span class="user-name-text">{{ current_user.nombre | lower }}</span>
+            </div>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-logout-top">
+                    <ion-icon name="exit-outline"></ion-icon> <span>Cerrar Sesión</span>
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <section class="banner-nutri" id="banner-nutri">
+        <div class="banner-nutri-content">
+            <div class="banner-nutri-left">
+                <span class="panel-tag-nutri">
+                    <ion-icon name="shield-checkmark-outline"></ion-icon>
+                    PANEL PROFESIONAL
+                </span>
+                <h1 class="welcome-main-title">
+                    Hola, <span class="nombre-gradiente-nutri">{{ current_user.nombre }}</span>
+                </h1>
+                <p class="welcome-subtitle">Monitorea y gestiona todos tus pacientes desde un solo lugar.</p>
+            </div>
+            <div class="banner-nutri-right">
+                <a href="{{ url_for('nutritionist.patients') }}" class="btn-nuevo-paciente">
+                    <ion-icon name="add-circle-outline"></ion-icon> Ver Todos los Pacientes
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="dashboard-stats" class="stats-grid stagger-fade">
+        <div class="stat-card purple" id="card-total-pacientes">
+            <div class="stat-icon-wrapper purple">
+                <ion-icon name="people-outline"></ion-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Pacientes</span>
+                <span class="stat-number purple" data-count-to="{{ total_pacientes or 0 }}" id="total-pacientes">{{ total_pacientes or 0 }}</span>
+                <span class="stat-change" id="total-pacientes-label">Pacientes registrados</span>
+            </div>
+        </div>
+
+        <div class="stat-card green" id="card-total-evaluaciones">
+            <div class="stat-icon-wrapper green">
+                <ion-icon name="document-text-outline"></ion-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Evaluaciones</span>
+                <span class="stat-number green" data-count-to="{{ total_evaluaciones or 0 }}" id="total-evaluaciones">{{ total_evaluaciones or 0 }}</span>
+                <span class="stat-change" id="total-evaluaciones-label">Evaluaciones realizadas</span>
+            </div>
+        </div>
+
+        <div class="stat-card orange" id="card-riesgo-alto">
+            <div class="stat-icon-wrapper orange">
+                <ion-icon name="warning-outline"></ion-icon>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Riesgo Alto</span>
+                <span class="stat-number orange" data-count-to="{{ pacientes_riesgo_alto or 0 }}" id="pacientes-riesgo-alto">{{ pacientes_riesgo_alto or 0 }}</span>
+                <span class="stat-change" id="pacientes-riesgo-label">Pacientes con riesgo metabólico alto</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="nutri-container page-enter" id="nutritionist-dashboard">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">
+                    <ion-icon name="people-outline"></ion-icon>
+                    Pacientes Recientes
+                </h2>
+                <p class="section-subtitle" id="pacientes-subtitulo">{{ pacientes|length }} paciente(s) registrado(s)</p>
+            </div>
+            <div class="search-wrapper">
+                <ion-icon name="search-outline"></ion-icon>
+                <input
+                    type="text"
+                    id="busqueda-paciente"
+                    class="search-input"
+                    placeholder="Buscar por nombre o correo..."
+                    autocomplete="off"
+                >
+            </div>
+        </div>
+
+        {% if pacientes %}
+        <div class="patient-list stagger-fade" id="lista-pacientes">
+            {% for p in pacientes %}
+            <div class="patient-item {% if p.riesgo_meta == 'Alto' %}risk-high{% elif p.riesgo_meta == 'Moderado' %}risk-moderate{% endif %}"
+                 data-paciente-id="{{ p.id }}"
+                 data-paciente-nombre="{{ p.nombre }}"
+                 data-paciente-correo="{{ p.correo }}"
+                 data-riesgo="{{ p.riesgo_meta or 'Bajo' }}"
+                 id="paciente-{{ p.id }}">
+                <div class="patient-avatar">{{ p.nombre[0] | upper }}</div>
+                <div class="patient-info">
+                    <div class="patient-name">
+                        {{ p.nombre }}
+                        {% if p.riesgo_meta == 'Alto' %}
+                        <span class="risk-badge alto">Alto</span>
+                        {% elif p.riesgo_meta == 'Moderado' %}
+                        <span class="risk-badge moderado">Moderado</span>
+                        {% else %}
+                        <span class="risk-badge bajo">Bajo</span>
+                        {% endif %}
+                    </div>
+                    <div class="patient-email">{{ p.correo }}</div>
+                </div>
+                <div class="patient-meta">
+                    {% if p.ultima_evaluacion %}
+                    <div class="patient-meta-item">
+                        <span class="meta-label-sm">Última Evaluación</span>
+                        <span class="meta-value green">{{ p.ultima_evaluacion.fecha }}</span>
+                    </div>
+                    <div class="patient-meta-item">
+                        <span class="meta-label-sm">IMC</span>
+                        <span class="meta-value purple">{{ p.ultima_evaluacion.imc }}</span>
+                    </div>
+                    <div class="patient-meta-item">
+                        <span class="meta-label-sm">Clasificación</span>
+                        <span class="meta-value" style="color:var(--texto-gris-claro);font-size:13px;">{{ p.ultima_evaluacion.clasificacion }}</span>
+                    </div>
+                    {% else %}
+                    <div class="patient-meta-item">
+                        <span class="meta-label-sm">Estado</span>
+                        <span class="meta-value" style="color:var(--texto-gris);font-size:13px;">Sin evaluaciones</span>
+                    </div>
+                    {% endif %}
+                    <a href="{{ url_for('nutritionist.patient_detail', id=p.id) }}" class="btn-view-patient">
+                        Ver Detalle <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" id="empty-pacientes">
+            <div class="empty-state-icon">
+                <ion-icon name="people-outline"></ion-icon>
+            </div>
+            <h3>No hay pacientes registrados</h3>
+            <p>Aún no hay pacientes en el sistema. Los pacientes aparecerán aquí cuando se registren y realicen evaluaciones.</p>
+            <a href="{{ url_for('nutritionist.patients') }}" style="text-decoration:none;">
+                <button class="btn-nuevo-paciente" style="font-size:14px;padding:14px 28px;">
+                    <ion-icon name="refresh-outline"></ion-icon> Actualizar Vista
+                </button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="{{ url_for('static', filename='js/nutricionista.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriExpert - {{ paciente.nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nutricionista.css') }}">
+</head>
+<body>
+
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+    <div class="flash-contenedor">
+        {% for categoria, mensaje in mensajes %}
+        <div class="flash-mensaje flash-{{ categoria }}">
+            <span class="flash-texto">{{ mensaje }}</span>
+            <button class="flash-cerrar">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <nav class="navbar-superior">
+        <div class="logo-container-exact">
+            <div class="logo-square-icon">
+                <ion-icon name="pulse-outline"></ion-icon>
+            </div>
+            <div class="logo-text-gradient">NUTRIEXPERT</div>
+        </div>
+
+        <div class="nav-links-centro">
+            <a href="{{ url_for('nutritionist.index') }}" class="nav-link-item">
+                <ion-icon name="grid-outline"></ion-icon>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="{{ url_for('nutritionist.patients') }}" class="nav-link-item">
+                <ion-icon name="people-outline"></ion-icon>
+                <span class="nav-text">Pacientes</span>
+            </a>
+        </div>
+
+        <div class="nav-actions-derecha">
+            <div class="user-profile-wrapper">
+                <div class="user-avatar-initial">{{ current_user.nombre[0] | upper }}</div>
+                <span class="user-name-text">{{ current_user.nombre | lower }}</span>
+            </div>
+            <form method="POST" action="{{ url_for('auth.logout') }}" style="display:inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn-logout-top">
+                    <ion-icon name="exit-outline"></ion-icon> <span>Cerrar Sesión</span>
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <section class="banner-nutri" id="banner-detalle">
+        <div class="banner-nutri-content">
+            <div class="banner-nutri-left">
+                <span class="panel-tag-nutri">
+                    <ion-icon name="person-outline"></ion-icon>
+                    FICHA DEL PACIENTE
+                </span>
+                <h1 class="welcome-main-title">
+                    <span class="nombre-gradiente-nutri">{{ paciente.nombre }}</span>
+                </h1>
+                <p class="welcome-subtitle">Historial clínico completo y evaluaciones realizadas.</p>
+            </div>
+            <div class="banner-nutri-right">
+                <a href="{{ url_for('nutritionist.patients') }}" class="btn-nuevo-paciente" style="background:transparent;border:1px solid rgba(155,81,224,0.3);box-shadow:none;">
+                    <ion-icon name="arrow-back-outline"></ion-icon> Volver a Pacientes
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="nutri-container page-enter" id="nutritionist-patient-detail">
+        <a href="{{ url_for('nutritionist.patients') }}" class="back-link">
+            <ion-icon name="chevron-back-outline"></ion-icon> Todos los pacientes
+        </a>
+
+        <div class="profile-card" id="perfil-paciente">
+            <div class="profile-avatar-large">{{ paciente.nombre[0] | upper }}</div>
+            <div class="profile-details">
+                <div class="profile-field" id="campo-nombre">
+                    <span class="profile-field-label">Nombre Completo</span>
+                    <span class="profile-field-value">{{ paciente.nombre }}</span>
+                </div>
+                <div class="profile-field" id="campo-correo">
+                    <span class="profile-field-label">Correo Electrónico</span>
+                    <span class="profile-field-value purple">{{ paciente.correo }}</span>
+                </div>
+                <div class="profile-field" id="campo-edad">
+                    <span class="profile-field-label">Edad</span>
+                    <span class="profile-field-value">{{ paciente.edad }} años</span>
+                </div>
+                <div class="profile-field" id="campo-sexo">
+                    <span class="profile-field-label">Sexo</span>
+                    <span class="profile-field-value">
+                        {% if paciente.sexo == 'M' %}Masculino
+                        {% elif paciente.sexo == 'F' %}Femenino
+                        {% else %}Otro{% endif %}
+                    </span>
+                </div>
+                <div class="profile-field" id="campo-registro">
+                    <span class="profile-field-label">Fecha de Registro</span>
+                    <span class="profile-field-value">{{ paciente.fecha_registro.strftime('%d/%m/%Y') }}</span>
+                </div>
+                <div class="profile-field" id="campo-evaluaciones">
+                    <span class="profile-field-label">Total Evaluaciones</span>
+                    <span class="profile-field-value purple">{{ evaluaciones|length }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="historial-evaluaciones">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">
+                        <ion-icon name="analytics-outline"></ion-icon>
+                        Historial de Evaluaciones
+                    </h2>
+                    <p class="section-subtitle">
+                        {% if evaluaciones %}
+                        {{ evaluaciones|length }} evaluación(es) realizada(s) por el paciente.
+                        {% else %}
+                        Este paciente aún no ha realizado evaluaciones.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            {% if evaluaciones %}
+            <div class="evaluation-timeline stagger-fade" id="lista-evaluaciones">
+                {% for ev in evaluaciones %}
+                {% set r = ev.resultados_dict %}
+                <div class="evaluation-card" id="evaluacion-{{ ev.id }}">
+                    <div class="eval-date-badge">
+                        <span class="day">{{ ev.fecha_registro.strftime('%d') }}</span>
+                        <span class="month">{{ ev.fecha_registro.strftime('%b') | upper }}</span>
+                        <span class="year">{{ ev.fecha_registro.strftime('%Y') }}</span>
+                    </div>
+
+                    <div class="eval-metrics">
+                        <div class="eval-metric-item" id="eval-{{ ev.id }}-imc">
+                            <span class="eval-metric-label">IMC</span>
+                            <span class="eval-metric-value green">{{ r.get('imc', '—') }}</span>
+                        </div>
+                        <div class="eval-metric-item" id="eval-{{ ev.id }}-clasificacion">
+                            <span class="eval-metric-label">Clasificación OMS</span>
+                            <span class="eval-metric-value" style="color:var(--texto-gris-claro);font-size:13px;">{{ r.get('clasificacion_imc', '—') }}</span>
+                        </div>
+                        <div class="eval-metric-item" id="eval-{{ ev.id }}-peso">
+                            <span class="eval-metric-label">Peso</span>
+                            <span class="eval-metric-value">{{ ev.peso }} kg</span>
+                        </div>
+                        <div class="eval-metric-item" id="eval-{{ ev.id }}-tmb">
+                            <span class="eval-metric-label">TMB</span>
+                            <span class="eval-metric-value purple">{{ r.get('tmb', '—') }} kcal</span>
+                        </div>
+                        <div class="eval-metric-item" id="eval-{{ ev.id }}-calorias">
+                            <span class="eval-metric-label">Cal. Objetivo</span>
+                            <span class="eval-metric-value">{{ r.get('calorias_objetivo', '—') }} kcal</span>
+                        </div>
+                    </div>
+
+                    <div class="eval-actions">
+                        <a href="{{ url_for('dashboard.resultados', id=ev.id) }}" class="btn-eval-report" target="_blank">
+                            <ion-icon name="document-text-outline"></ion-icon> Reporte
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state" id="empty-evaluaciones">
+                <div class="empty-state-icon">
+                    <ion-icon name="analytics-outline"></ion-icon>
+                </div>
+                <h3>Sin evaluaciones registradas</h3>
+                <p>Este paciente todavía no ha completado ninguna evaluación clínica. Las evaluaciones aparecerán aquí una vez que el paciente realice su primer análisis.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="{{ url_for('static', filename='js/nutricionista.js') }}"></script>
+</body>
+</html>
