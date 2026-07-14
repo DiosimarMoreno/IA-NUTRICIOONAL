@@ -51,8 +51,8 @@
 <section class="banner-resultados">
         <img src="{{ url_for('static', filename='img/resultados.jpg') }}" alt="Fondo Resultados" class="banner-img-bg">
         <div class="banner-resultados-content">
-            <a href="{{ url_for('dashboard.evaluacion') }}" class="link-volver">
-                <ion-icon name="chevron-back-outline"></ion-icon> Volver a Evaluación
+            <a href="{{ url_for('dashboard.index') }}" class="link-volver">
+                <ion-icon name="chevron-back-outline"></ion-icon> Volver al Panel
             </a>
             <div class="header-titulos">
                 <span class="tag-informe">DIAGNÓSTICO EN TIEMPO REAL</span>
@@ -166,10 +166,22 @@
                     <p class="calorias-descripcion">Calorías requeridas para mantener las funciones vitales en reposo absoluto.</p>
                 </div>
                 
+                <div class="calorias-card-central factor-card">
+                    <span class="calorias-titulo">Factor de Actividad</span>
+                    <div class="calorias-numero neon-txt-azul">{{ r.factor_actividad or '1.2' }}<span class="unidad-cal">×</span></div>
+                    <p class="calorias-descripcion">{{ r.actividad_etiqueta or '—' }}. Multiplicador aplicado a la TMB para obtener el gasto energético total.</p>
+                </div>
+
                 <div class="calorias-card-central objetivo-card">
                     <span class="calorias-titulo">Calorías Objetivo Recomendadas</span>
                     <div class="calorias-numero neon-txt-morado">{{ r.calorias_objetivo or '0' }} <span class="unidad-cal">kcal</span></div>
-                    <p class="calorias-descripcion">Ajustadas matemáticamente según el objetivo clínico seleccionado.</p>
+                    <p class="calorias-descripcion">{{ r.objetivo_etiqueta or 'Ajustadas según el objetivo clínico seleccionado' }}.</p>
+                </div>
+
+                <div class="calorias-card-central">
+                    <span class="calorias-titulo">Gasto Energético Total (TDEE)</span>
+                    <div class="calorias-numero">{{ r.tmb or '0' }} × {{ r.factor_actividad or '1.2' }} = <span class="unidad-cal">{{ ((r.tmb or 0) * (r.factor_actividad or 1.2)) | round(0) }} kcal</span></div>
+                    <p class="calorias-descripcion">TMB multiplicada por el factor de actividad física.</p>
                 </div>
             </div>
 
@@ -214,6 +226,128 @@
 
             </div>
         </div>
+
+        <div class="card-bloque-resultado shadow-neon-naranja">
+            <div class="badge-bloque color-naranja">
+                <ion-icon name="warning-outline"></ion-icon> EVALUACIÓN DE RIESGOS
+            </div>
+            
+            <div class="grid-riesgos">
+                <div class="riesgo-card">
+                    <div class="riesgo-header">
+                        <ion-icon name="shield-outline" class="icon-metrica neon-txt-naranja"></ion-icon>
+                        <span class="metrica-label">RIESGO METABÓLICO</span>
+                    </div>
+                    {% if r.riesgo_metabolico == 'Alto' %}
+                    <span class="riesgo-badge riesgo-alto">
+                        <ion-icon name="alert-circle-outline"></ion-icon> {{ r.riesgo_metabolico }}
+                    </span>
+                    {% elif r.riesgo_metabolico == 'Moderado' %}
+                    <span class="riesgo-badge riesgo-moderado">
+                        <ion-icon name="alert-outline"></ion-icon> {{ r.riesgo_metabolico }}
+                    </span>
+                    {% else %}
+                    <span class="riesgo-badge riesgo-bajo">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon> {{ r.riesgo_metabolico or '—' }}
+                    </span>
+                    {% endif %}
+                    <span class="metrica-subtext">
+                        {% if r.riesgo_metabolico == 'Alto' %}Se requiere atención profesional urgente
+                        {% elif r.riesgo_metabolico == 'Moderado' %}Se recomienda seguimiento periódico
+                        {% else %}Perfil dentro de rangos aceptables{% endif %}
+                    </span>
+                </div>
+
+                <div class="riesgo-card">
+                    <div class="riesgo-header">
+                        <ion-icon name="nutrition-outline" class="icon-metrica neon-txt-azul"></ion-icon>
+                        <span class="metrica-label">RIESGO NUTRICIONAL</span>
+                    </div>
+                    {% if r.riesgo_nutricional == 'Alto' %}
+                    <span class="riesgo-badge riesgo-alto">
+                        <ion-icon name="alert-circle-outline"></ion-icon> {{ r.riesgo_nutricional }}
+                    </span>
+                    {% elif r.riesgo_nutricional == 'Moderado' %}
+                    <span class="riesgo-badge riesgo-moderado">
+                        <ion-icon name="alert-outline"></ion-icon> {{ r.riesgo_nutricional }}
+                    </span>
+                    {% else %}
+                    <span class="riesgo-badge riesgo-bajo">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon> {{ r.riesgo_nutricional or '—' }}
+                    </span>
+                    {% endif %}
+                    <span class="metrica-subtext">
+                        {% if r.riesgo_nutricional == 'Alto' %}Evaluación nutricional prioritaria requerida
+                        {% elif r.riesgo_nutricional == 'Moderado' %}Requiere ajuste dietético supervisado
+                        {% else %}Estado nutricional adecuado{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {% if r.alertas %}
+        <div class="card-bloque-resultado shadow-neon-naranja">
+            <div class="badge-bloque color-naranja">
+                <ion-icon name="alert-circle-outline"></ion-icon> ALERTAS CLÍNICAS
+            </div>
+            <div class="alertas-lista">
+                {% for alerta in r.alertas %}
+                <div class="alerta-item">
+                    <ion-icon name="warning" class="alerta-icon"></ion-icon>
+                    <span class="alerta-texto">{{ alerta }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if r.recomendaciones %}
+        <div class="card-bloque-resultado shadow-neon-verde">
+            <div class="badge-bloque color-verde">
+                <ion-icon name="bulb-outline"></ion-icon> RECOMENDACIONES PERSONALIZADAS
+            </div>
+            <div class="recomendaciones-lista">
+                {% for rec in r.recomendaciones %}
+                <div class="recomendacion-item">
+                    <span class="recomendacion-numero">{{ loop.index }}</span>
+                    <span class="recomendacion-texto">{{ rec }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if r.nota_clinica %}
+        <div class="card-bloque-resultado shadow-neon-azul">
+            <div class="badge-bloque color-azul">
+                <ion-icon name="document-text-outline"></ion-icon> NOTA CLÍNICA
+            </div>
+            <div class="nota-clinica-bloque">
+                <p class="nota-clinica-texto">{{ r.nota_clinica }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if r.explicaciones %}
+        <div class="card-bloque-resultado shadow-neon-azul">
+            <div class="badge-bloque color-azul">
+                <ion-icon name="code-outline"></ion-icon> DETALLE DEL ANÁLISIS
+            </div>
+            <details class="explicaciones-accordion">
+                <summary class="explicaciones-toggle">
+                    <ion-icon name="chevron-down-outline"></ion-icon>
+                    Ver traza completa del motor de inferencia ({{ r.explicaciones | length }} pasos)
+                </summary>
+                <div class="explicaciones-contenido">
+                    {% for exp in r.explicaciones %}
+                    <div class="explicacion-item">
+                        <code class="explicacion-codigo">{{ exp }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+            </details>
+        </div>
+        {% endif %}
 
         <div class="seccion-acciones-resultado">
             <a href="{{ url_for('dashboard.plan_accion', id=evaluacion.id) }}">

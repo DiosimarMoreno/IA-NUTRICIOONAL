@@ -342,6 +342,78 @@ body {
     box-shadow: 0 0 15px rgba(0, 230, 118, 0.08);
 }
 
+.input-with-icon input.input-invalid {
+    border-color: rgba(239, 68, 68, 0.6);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.1);
+}
+
+.input-error-msg {
+    display: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ef4444;
+    padding-left: 2px;
+    margin-top: -4px;
+}
+
+.input-error-msg.visible {
+    display: block;
+}
+
+.prefill-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: linear-gradient(135deg, rgba(0, 114, 255, 0.08) 0%, rgba(155, 81, 224, 0.06) 100%);
+    border: 1px solid rgba(0, 114, 255, 0.2);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+}
+
+.prefill-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.prefill-icon {
+    font-size: 20px;
+    color: var(--color-azul);
+    flex-shrink: 0;
+}
+
+.prefill-texto {
+    font-size: 13px;
+    color: var(--texto-gris);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.prefill-btn-limpiar {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--texto-gris);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.prefill-btn-limpiar:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
 .grid-seleccion-cards-actividad {
     display: flex;
     flex-direction: column;

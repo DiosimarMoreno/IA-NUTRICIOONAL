@@ -469,6 +469,163 @@ body {
     font-weight: 400;
 }
 
+/* Distribución visual de macros */
+.macros-visual-card {
+    background-color: var(--bg-tarjetas);
+    border: 1px solid var(--borde-tarjeta);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-suave);
+    padding: var(--padding-tarjeta);
+}
+
+.macros-visual-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.macros-visual-icon {
+    font-size: 22px;
+    color: var(--color-verde-turquesa);
+}
+
+.macros-visual-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-verde-brillante);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.macros-bars-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.macro-bar-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 90px;
+    align-items: center;
+    gap: 16px;
+}
+
+.macro-bar-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.macro-bar-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto-blanco);
+}
+
+.macro-bar-value {
+    font-size: 12px;
+    color: var(--texto-gris);
+}
+
+.macro-bar-track {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.macro-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.8s ease;
+}
+
+.bar-proteina {
+    background: linear-gradient(90deg, #0072ff, #00a8ff);
+}
+
+.bar-carbos {
+    background: linear-gradient(90deg, #00d4aa, #00ffcc);
+}
+
+.bar-grasas {
+    background: linear-gradient(90deg, #ff6d00, #ff8c00);
+}
+
+.macro-bar-cal {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--texto-gris);
+    text-align: right;
+}
+
+/* Recomendaciones del plan */
+.recomendaciones-plan-card {
+    background-color: var(--bg-tarjetas);
+    border: 1px solid var(--borde-tarjeta);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-suave);
+    padding: var(--padding-tarjeta);
+}
+
+.recomendaciones-plan-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.recomendaciones-plan-icon {
+    font-size: 22px;
+    color: var(--color-verde-brillante);
+}
+
+.recomendaciones-plan-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-verde-brillante);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.recomendaciones-plan-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recomendacion-plan-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(0, 212, 170, 0.04);
+    border: 1px solid rgba(0, 212, 170, 0.12);
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+
+.recomendacion-plan-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: rgba(0, 212, 170, 0.15);
+    color: var(--color-verde-brillante);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.recomendacion-plan-texto {
+    font-size: 14px;
+    color: var(--texto-gris);
+    line-height: 1.6;
+}
+
 /* Selector de días de entrenamiento */
 .dias-selector {
     display: flex;
@@ -813,6 +970,15 @@ body {
         grid-template-columns: 1fr;
     }
     
+    .macro-bar-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .macro-bar-cal {
+        text-align: left;
+    }
+
     .botones-accion-row {
         flex-direction: column;
     }

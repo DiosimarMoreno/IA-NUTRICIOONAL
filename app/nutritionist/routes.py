@@ -1,9 +1,10 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, Response
 from flask_login import login_required, current_user
 from . import nutritionist_bp
 from ..decorators import role_required
 from ..models import User, Evaluacion
 from ..extensions import db
+from ..services.pdf_report import generar_reporte_pdf
 
 PACIENTES_POR_PAGINA = 20
 
@@ -115,4 +116,26 @@ def patient_detail(id):
         user=current_user,
         paciente=paciente,
         evaluaciones=evaluaciones,
+    )
+
+
+@nutritionist_bp.route('/descargar-reporte/<int:id>')
+@login_required
+@role_required('nutritionist')
+def descargar_reporte(id):
+    ev = Evaluacion.query.get_or_404(id)
+    paciente = User.query.get_or_404(ev.usuario_id)
+
+    if paciente.role != 'user':
+        flash('Evaluacion no valida.', 'error')
+        return redirect(url_for('nutritionist.patients'))
+
+    pdf_bytes = generar_reporte_pdf(ev, paciente)
+    nombre_limpio = paciente.nombre.replace(" ", "_")
+    return Response(
+        pdf_bytes,
+        mimetype='application/pdf',
+        headers={
+            'Content-Disposition': f'attachment; filename=reporte_{nombre_limpio}_{ev.id}.pdf'
+        }
     )

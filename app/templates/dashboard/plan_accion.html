@@ -73,8 +73,8 @@
                 <div class="resumen-descripcion">Proteína diaria recomendada</div>
             </div>
             <div class="resumen-card">
-                <div class="resumen-valor resumen-naranja" id="frecuencia-entrenamiento">6 días</div>
-                <div class="resumen-descripcion">Fuencia semanal de entrenamiento</div>
+                <div class="resumen-valor resumen-naranja" id="frecuencia-entrenamiento">{{ r.frecuencia_entrenamiento or '6' }} días</div>
+                <div class="resumen-descripcion">Frecuencia semanal de entrenamiento</div>
             </div>
         </div>
 
@@ -116,22 +116,22 @@
                     </div>
                 </div>
                 <div class="comida-alimentos" id="alimentos-desayuno">
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">3 huevos revueltos con espinacas</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 rebanada de pan integral</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1/2 aguacate</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">Café negro o té sin azúcar</span>
-                    </div>
+                    {% if r.objetivo_etiqueta == 'Hipertrofia Muscular' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">4 claras + 2 huevos enteros revueltos con espinacas</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">2 rebanadas de pan integral con aguacate</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de avena con plátano y canela</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Café negro o té sin azúcar</span></div>
+                    {% elif r.objetivo_etiqueta == 'Pérdida de Grasa' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">3 claras de huevo con espinacas y tomate</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 rebanada de pan integral</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 aguacate pequeño</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Café negro o té verde sin azúcar</span></div>
+                    {% else %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">3 huevos revueltos con espinacas</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 rebanada de pan integral</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 aguacate</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Café negro o té sin azúcar</span></div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -153,14 +153,16 @@
                     </div>
                 </div>
                 <div class="comida-alimentos" id="alimentos-snack-am">
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 puñado de almendras (30g)</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 manzana verde</span>
-                    </div>
+                    {% if r.objetivo_etiqueta == 'Hipertrofia Muscular' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 puñado de almendras (40g)</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 manzana + 1 cucharada de mantequilla de maní</span></div>
+                    {% elif r.objetivo_etiqueta == 'Pérdida de Grasa' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 yogur griego natural (sin azúcar)</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">10 almendras (15g)</span></div>
+                    {% else %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 puñado de almendras (30g)</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 manzana verde</span></div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -182,22 +184,22 @@
                     </div>
                 </div>
                 <div class="comida-alimentos" id="alimentos-almuerzo">
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">200g de pechuga de pollo</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 taza de arroz integral</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">Ensalada mixta con aceite de oliva</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1/2 taza de frijoles</span>
-                    </div>
+                    {% if r.objetivo_etiqueta == 'Hipertrofia Muscular' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">250g de pechuga de pollo o carne magra</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1.5 tazas de arroz integral o pasta integral</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Ensalada mixta con aceite de oliva</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de frijoles o lentejas</span></div>
+                    {% elif r.objetivo_etiqueta == 'Pérdida de Grasa' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">180g de pechuga de pollo a la plancha</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">3/4 taza de arroz integral</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Ensalada verde con limón (sin aceite)</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 taza de verduras al vapor</span></div>
+                    {% else %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">200g de pechuga de pollo</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de arroz integral</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Ensalada mixta con aceite de oliva</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 taza de frijoles</span></div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -219,14 +221,17 @@
                     </div>
                 </div>
                 <div class="comida-alimentos" id="alimentos-snack-pm">
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 batido de proteína</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 plátano</span>
-                    </div>
+                    {% if r.objetivo_etiqueta == 'Hipertrofia Muscular' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 batido de proteína con leche</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 plátano</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 cucharada de avena molida</span></div>
+                    {% elif r.objetivo_etiqueta == 'Pérdida de Grasa' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 batido de proteína con agua</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 plátano</span></div>
+                    {% else %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 batido de proteína</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 plátano</span></div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -248,18 +253,20 @@
                     </div>
                 </div>
                 <div class="comida-alimentos" id="alimentos-cena">
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">150g de salmón al horno</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 taza de brócoli al vapor</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 batata pequeña</span>
-                    </div>
+                    {% if r.objetivo_etiqueta == 'Hipertrofia Muscular' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">200g de salmón o atún al horno</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de brócoli al vapor</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 batata mediana al horno</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 cucharada de aceite de oliva extra virgen</span></div>
+                    {% elif r.objetivo_etiqueta == 'Pérdida de Grasa' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">150g de salmón al horno</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de brócoli al vapor</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Ensalada de hojas verdes con limón</span></div>
+                    {% else %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">150g de salmón al horno</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de brócoli al vapor</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 batata pequeña</span></div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -281,17 +288,76 @@
                     </div>
                 </div>
                 <div class="comida-alimentos" id="alimentos-snack-nocturno">
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1/2 taza de queso cottage</span>
-                    </div>
-                    <div class="alimento-item">
-                        <span class="alimento-bullet"></span>
-                        <span class="alimento-texto">1 cucharada de miel</span>
-                    </div>
+                    {% if r.objetivo_etiqueta == 'Hipertrofia Muscular' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 taza de queso cottage (caseína)</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 cucharada de mantequilla de maní</span></div>
+                    {% elif r.objetivo_etiqueta == 'Pérdida de Grasa' %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 taza de queso cottage bajo en grasa</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">Canela en polvo</span></div>
+                    {% else %}
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1/2 taza de queso cottage</span></div>
+                    <div class="alimento-item"><span class="alimento-bullet"></span><span class="alimento-texto">1 cucharada de miel</span></div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+
+        <!-- Distribución visual de macros -->
+        <div class="macros-visual-card" id="macros-visual">
+            <div class="macros-visual-header">
+                <ion-icon name="pie-chart-outline" class="macros-visual-icon"></ion-icon>
+                <h3 class="macros-visual-title">Distribución de Macronutrientes</h3>
+            </div>
+            <div class="macros-bars-container">
+                <div class="macro-bar-row">
+                    <div class="macro-bar-label">
+                        <span class="macro-bar-name">Proteínas</span>
+                        <span class="macro-bar-value">{{ r.proteina_g or '0' }}g · {{ r.pct_proteina or '0' }}%</span>
+                    </div>
+                    <div class="macro-bar-track">
+                        <div class="macro-bar-fill bar-proteina" style="width: {{ r.pct_proteina or 0 }}%"></div>
+                    </div>
+                    <span class="macro-bar-cal">{{ r.cal_proteina or '0' }} kcal</span>
+                </div>
+                <div class="macro-bar-row">
+                    <div class="macro-bar-label">
+                        <span class="macro-bar-name">Carbohidratos</span>
+                        <span class="macro-bar-value">{{ r.carbos_g or '0' }}g · {{ r.pct_carbos or '0' }}%</span>
+                    </div>
+                    <div class="macro-bar-track">
+                        <div class="macro-bar-fill bar-carbos" style="width: {{ r.pct_carbos or 0 }}%"></div>
+                    </div>
+                    <span class="macro-bar-cal">{{ r.cal_carbos or '0' }} kcal</span>
+                </div>
+                <div class="macro-bar-row">
+                    <div class="macro-bar-label">
+                        <span class="macro-bar-name">Grasas</span>
+                        <span class="macro-bar-value">{{ r.grasas_g or '0' }}g · {{ r.pct_grasas or '0' }}%</span>
+                    </div>
+                    <div class="macro-bar-track">
+                        <div class="macro-bar-fill bar-grasas" style="width: {{ r.pct_grasas or 0 }}%"></div>
+                    </div>
+                    <span class="macro-bar-cal">{{ r.cal_grasas or '0' }} kcal</span>
+                </div>
+            </div>
+        </div>
+
+        {% if r.recomendaciones %}
+        <div class="recomendaciones-plan-card" id="recomendaciones-plan">
+            <div class="recomendaciones-plan-header">
+                <ion-icon name="bulb-outline" class="recomendaciones-plan-icon"></ion-icon>
+                <h3 class="recomendaciones-plan-title">Recomendaciones Personalizadas</h3>
+            </div>
+            <div class="recomendaciones-plan-lista">
+                {% for rec in r.recomendaciones %}
+                <div class="recomendacion-plan-item">
+                    <span class="recomendacion-plan-num">{{ loop.index }}</span>
+                    <span class="recomendacion-plan-texto">{{ rec }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
         <!-- Encabezado de entrenamiento -->
         <div class="entrenamiento-header" id="header-entrenamiento" style="display: none;">
@@ -386,12 +452,10 @@
             <div class="nota-clinica-content">
                 <div class="nota-clinica-header">
                     <ion-icon name="shield-checkmark-outline" class="nota-icon"></ion-icon>
-                    <h3 class="nota-titulo">Nota clínica — Adaptación progresiva</h3>
+                    <h3 class="nota-titulo">Nota clínica — Análisis del motor</h3>
                 </div>
                 <p class="nota-texto" id="texto-nota-clinica">
-                    Este plan nutricional ha sido diseñado para optimizar tu composición corporal según tu objetivo de {{ r.objetivo_etiqueta or 'mantenimiento' }}. 
-                    Las porciones y distribución de macronutrientes están calculadas para cubrir tus requerimientos energéticos diarios de {{ r.calorias_objetivo or '2000' }} kcal.
-                    Se recomienda seguir este plan por un mínimo de 4 semanas para observar cambios significativos. Ajusta las cantidades según tu respuesta individual y consulta con un profesional si experimentas cualquier malestar.
+                    {{ r.nota_clinica or 'Este plan nutricional ha sido diseñado para optimizar tu composición corporal. Se recomienda seguir este plan por un mínimo de 4 semanas para observar cambios significativos.' }}
                 </p>
             </div>
         </div>
@@ -420,6 +484,8 @@
         const rutinaCard = document.getElementById('rutina-card');
         const recomendacionEntrenamiento = document.getElementById('recomendacion-entrenamiento');
         const notaClinica = document.getElementById('nota-clinica');
+        const macrosVisual = document.getElementById('macros-visual');
+        const recomendacionesPlan = document.getElementById('recomendaciones-plan');
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -443,6 +509,8 @@
                     rutinaCard.style.display = 'none';
                     recomendacionEntrenamiento.style.display = 'none';
                     notaClinica.style.display = 'block';
+                    if (macrosVisual) macrosVisual.style.display = 'block';
+                    if (recomendacionesPlan) recomendacionesPlan.style.display = 'block';
                 } else {
                     button.classList.remove('tab-inactive');
                     button.classList.add('tab-activa-naranja');
@@ -455,6 +523,8 @@
                     rutinaCard.style.display = 'block';
                     recomendacionEntrenamiento.style.display = 'block';
                     notaClinica.style.display = 'none';
+                    if (macrosVisual) macrosVisual.style.display = 'none';
+                    if (recomendacionesPlan) recomendacionesPlan.style.display = 'none';
                 }
             });
         });

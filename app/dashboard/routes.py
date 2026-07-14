@@ -18,7 +18,9 @@ def index():
 @login_required
 @role_required('user')
 def evaluacion():
-    return render_template('dashboard/evaluacion.html')
+    ultima = Evaluacion.query.filter_by(usuario_id=current_user.id) \
+        .order_by(Evaluacion.fecha_registro.desc()).first()
+    return render_template('dashboard/evaluacion.html', ultima_evaluacion=ultima)
 
 @dashboard_bp.route('/evaluar', methods=['POST'])
 @login_required
@@ -32,6 +34,14 @@ def evaluar_post():
 
     if not all([estatura, peso, nivel_actividad, objetivo_principal]):
         flash('Todos los campos obligatorios deben estar completos.', 'error')
+        return redirect(url_for('dashboard.evaluacion'))
+
+    if estatura < 100 or estatura > 250:
+        flash('La estatura debe estar entre 100 y 250 cm.', 'error')
+        return redirect(url_for('dashboard.evaluacion'))
+
+    if peso < 30 or peso > 250:
+        flash('El peso debe estar entre 30 y 250 kg.', 'error')
         return redirect(url_for('dashboard.evaluacion'))
 
     datos = {

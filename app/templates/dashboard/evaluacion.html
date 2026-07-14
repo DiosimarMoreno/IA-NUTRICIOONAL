@@ -64,6 +64,18 @@
             <div class="paso-tab-item active-morado"><span>04</span> Objetivo Principal</div>
         </div>
 
+        {% if ultima_evaluacion %}
+        <div class="prefill-banner" id="prefill-banner">
+            <div class="prefill-banner-content">
+                <ion-icon name="information-circle-outline" class="prefill-icon"></ion-icon>
+                <span class="prefill-texto">Valores precargados de tu última evaluación ({{ ultima_evaluacion.fecha_registro.strftime('%d/%m/%Y') }}). Modifica solo lo que cambió.</span>
+            </div>
+            <button type="button" class="prefill-btn-limpiar" id="btn-limpiar-form">
+                <ion-icon name="refresh-outline"></ion-icon> Limpiar
+            </button>
+        </div>
+        {% endif %}
+
         <form id="form-evaluacion-clinica" method="POST" action="{{ url_for('dashboard.evaluar_post') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             
@@ -76,15 +88,19 @@
                         <label for="estatura">ESTATURA (CM)</label>
                         <div class="input-with-icon">
                             <ion-icon name="scale-outline"></ion-icon>
-                            <input type="number" name="estatura" id="estatura" placeholder="175" required>
+                            <input type="number" name="estatura" id="estatura" placeholder="175" min="100" max="250" required
+                                value="{{ ultima_evaluacion.estatura if ultima_evaluacion else '' }}">
                         </div>
+                        <span class="input-error-msg" id="error-estatura">La estatura debe estar entre 100 y 250 cm</span>
                     </div>
                     <div class="input-field-group">
                         <label for="peso">PESO CORPORAL (KG)</label>
                         <div class="input-with-icon">
                             <ion-icon name="pulse-outline"></ion-icon>
-                            <input type="number" name="peso" id="peso" placeholder="70" required>
+                            <input type="number" name="peso" id="peso" placeholder="70" min="30" max="250" required
+                                value="{{ ultima_evaluacion.peso if ultima_evaluacion else '' }}">
                         </div>
+                        <span class="input-error-msg" id="error-peso">El peso debe estar entre 30 y 250 kg</span>
                     </div>
                 </div>
             </div>
@@ -99,7 +115,8 @@
                         <label for="grasa-corporal">% DE GRASA CORPORAL</label>
                         <div class="input-with-icon">
                             <ion-icon name="water-outline"></ion-icon>
-                            <input type="number" name="porcentaje_grasa" id="grasa-corporal" placeholder="15">
+                            <input type="number" name="porcentaje_grasa" id="grasa-corporal" placeholder="15"
+                                value="{{ ultima_evaluacion.porcentaje_grasa if ultima_evaluacion and ultima_evaluacion.porcentaje_grasa else '' }}">
                         </div>
                     </div>
                 </div>
@@ -112,7 +129,7 @@
                 
                 <div class="grid-seleccion-cards-actividad">
                     <label class="card-select-option">
-                        <input type="radio" name="nivel_actividad" value="sedentario">
+                        <input type="radio" name="nivel_actividad" value="sedentario" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.nivel_actividad == 'sedentario' else '' }}>
                         <div class="card-select-inner">
                             <span class="opt-title">Sedentario</span>
                             <span class="opt-desc">Sin ejercicio, trabajo de oficina</span>
@@ -120,7 +137,7 @@
                     </label>
 
                     <label class="card-select-option">
-                        <input type="radio" name="nivel_actividad" value="ligera">
+                        <input type="radio" name="nivel_actividad" value="ligera" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.nivel_actividad == 'ligera' else '' }}>
                         <div class="card-select-inner">
                             <span class="opt-title">Actividad ligera</span>
                             <span class="opt-desc">1–3 días/semana</span>
@@ -128,7 +145,7 @@
                     </label>
 
                     <label class="card-select-option">
-                        <input type="radio" name="nivel_actividad" value="moderado">
+                        <input type="radio" name="nivel_actividad" value="moderado" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.nivel_actividad == 'moderado' else '' }}>
                         <div class="card-select-inner">
                             <span class="opt-title">Moderadamente activo</span>
                             <span class="opt-desc">3–5 días/semana</span>
@@ -136,7 +153,7 @@
                     </label>
 
                     <label class="card-select-option">
-                        <input type="radio" name="nivel_actividad" value="muy_activo">
+                        <input type="radio" name="nivel_actividad" value="muy_activo" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.nivel_actividad == 'muy_activo' else '' }}>
                         <div class="card-select-inner">
                             <span class="opt-title">Muy activo</span>
                             <span class="opt-desc">6–7 días intenso</span>
@@ -144,7 +161,7 @@
                     </label>
 
                     <label class="card-select-option">
-                        <input type="radio" name="nivel_actividad" value="extremo">
+                        <input type="radio" name="nivel_actividad" value="extremo" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.nivel_actividad == 'extremo' else '' }}>
                         <div class="card-select-inner">
                             <span class="opt-title">Extremadamente activo</span>
                             <span class="opt-desc">Dobles sesiones</span>
@@ -160,7 +177,7 @@
                 
                 <div class="grid-seleccion-cards-objetivo">
                     <label class="card-select-option-box">
-                        <input type="radio" name="objetivo_principal" value="hipertrofia">
+                        <input type="radio" name="objetivo_principal" value="hipertrofia" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.objetivo_principal == 'hipertrofia' else '' }}>
                         <div class="card-box-inner-dest" data-target-color="verde">
                             <div class="box-icon-container color-icon-verde">
                                 <ion-icon name="barbell-outline"></ion-icon>
@@ -171,7 +188,7 @@
                     </label>
 
                     <label class="card-select-option-box">
-                        <input type="radio" name="objetivo_principal" value="mantenimiento">
+                        <input type="radio" name="objetivo_principal" value="mantenimiento" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.objetivo_principal == 'mantenimiento' else '' }}>
                         <div class="card-box-inner-dest" data-target-color="azul">
                             <div class="box-icon-container color-icon-azul">
                                 <ion-icon name="shield-outline"></ion-icon>
@@ -182,7 +199,7 @@
                     </label>
 
                     <label class="card-select-option-box">
-                        <input type="radio" name="objetivo_principal" value="perdida">
+                        <input type="radio" name="objetivo_principal" value="perdida" {{ 'checked' if ultima_evaluacion and ultima_evaluacion.objetivo_principal == 'perdida' else '' }}>
                         <div class="card-box-inner-dest" data-target-color="naranja">
                             <div class="box-icon-container color-icon-naranja">
                                 <ion-icon name="trending-up-outline"></ion-icon>

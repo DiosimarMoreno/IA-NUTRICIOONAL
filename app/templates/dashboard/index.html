@@ -71,16 +71,82 @@
         <main class="main-content-wide">
             
             <section class="seccion-historial-contenedor">
-                <h2 class="titulo-grandioso-historial">Mi Historial</h2>
+                <div class="historial-header">
+                    <h2 class="titulo-grandioso-historial">Mi Historial</h2>
+                    {% if evaluaciones %}
+                    <a href="{{ url_for('dashboard.evaluacion') }}" class="btn-nueva-desde-historial">
+                        <ion-icon name="add-circle-outline"></ion-icon> Nueva Evaluación
+                    </a>
+                    {% endif %}
+                </div>
                 
                 {% if evaluaciones %}
                 <div class="historial-lista">
                     {% for ev in evaluaciones %}
-                    <div class="historial-item">
-                        <span>{{ ev.fecha_registro.strftime('%d/%m/%Y') }}</span>
-                        <span>IMC: {{ ev.imc }}</span>
-                        <a href="{{ url_for('dashboard.resultados', id=ev.id) }}">Ver</a>
-                    </div>
+                    {% set r = ev.resultados_dict %}
+                    <a href="{{ url_for('dashboard.resultados', id=ev.id) }}" class="historial-card">
+                        <div class="historial-card-left">
+                            <div class="historial-card-fecha">
+                                <ion-icon name="calendar-outline" class="historial-fecha-icon"></ion-icon>
+                                <span>{{ ev.fecha_registro.strftime('%d/%m/%Y') }}</span>
+                            </div>
+                            <div class="historial-card-datos">
+                                <div class="historial-dato">
+                                    <span class="historial-dato-label">Peso</span>
+                                    <span class="historial-dato-valor">{{ ev.peso }} kg</span>
+                                </div>
+                                <div class="historial-dato-sep"></div>
+                                <div class="historial-dato">
+                                    <span class="historial-dato-label">Estatura</span>
+                                    <span class="historial-dato-valor">{{ ev.estatura }} cm</span>
+                                </div>
+                                {% if r.calorias_objetivo %}
+                                <div class="historial-dato-sep"></div>
+                                <div class="historial-dato">
+                                    <span class="historial-dato-label">Calorías</span>
+                                    <span class="historial-dato-valor">{{ r.calorias_objetivo }} kcal</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="historial-card-right">
+                            <div class="historial-imc-block">
+                                <span class="historial-imc-label">IMC</span>
+                                <span class="historial-imc-valor">{{ ev.imc }}</span>
+                                {% set clas = ev.clasificacion_imc %}
+                                {% if 'Obesidad' in clas %}
+                                <span class="historial-imc-badge badge-obesidad">{{ clas }}</span>
+                                {% elif 'Sobrepeso' in clas %}
+                                <span class="historial-imc-badge badge-sobrepeso">{{ clas }}</span>
+                                {% elif 'Normal' in clas %}
+                                <span class="historial-imc-badge badge-normal">{{ clas }}</span>
+                                {% elif 'Delgadez' in clas %}
+                                <span class="historial-imc-badge badge-delgadez">{{ clas }}</span>
+                                {% else %}
+                                <span class="historial-imc-badge badge-default">{{ clas or '—' }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="historial-card-meta">
+                                {% set obj = ev.objetivo_principal %}
+                                {% if obj == 'hipertrofia' %}
+                                <span class="historial-obj-badge obj-hipertrofia">
+                                    <ion-icon name="barbell-outline"></ion-icon> Hipertrofia
+                                </span>
+                                {% elif obj == 'perdida' %}
+                                <span class="historial-obj-badge obj-perdida">
+                                    <ion-icon name="trending-down-outline"></ion-icon> Pérdida
+                                </span>
+                                {% else %}
+                                <span class="historial-obj-badge obj-mantenimiento">
+                                    <ion-icon name="shield-outline"></ion-icon> Mantenimiento
+                                </span>
+                                {% endif %}
+                                <ion-icon name="chevron-forward-outline" class="historial-arrow"></ion-icon>
+                            </div>
+                        </div>
+                    </a>
                     {% endfor %}
                 </div>
                 {% else %}

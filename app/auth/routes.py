@@ -63,7 +63,7 @@ def register():
             edad=int(edad),
             sexo=sexo.upper(),
             contrasena_hash=generate_password_hash(contrasena),
-            role=request.form.get('role', 'user')
+            role='user'
         )
         db.session.add(usuario)
         db.session.commit()

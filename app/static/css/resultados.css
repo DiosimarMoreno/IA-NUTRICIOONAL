@@ -383,6 +383,8 @@ body {
 .neon-txt-naranja { color: var(--color-naranja); filter: drop-shadow(0 0 4px rgba(255, 109, 0, 0.4)); }
 .neon-txt-morado { color: var(--color-morado); filter: drop-shadow(0 0 6px rgba(155, 81, 224, 0.5)); }
 .neon-txt-blanco { color: var(--texto-blanco); filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3)); }
+.color-naranja { background-color: rgba(255, 109, 0, 0.1); color: var(--color-naranja); border: 1px solid rgba(255, 109, 0, 0.2); }
+.shadow-neon-naranja:hover { box-shadow: 0px 0px 15px rgba(255, 109, 0, 0.25); }
 
 .contenedor-balance-calorico {
     display: grid;
@@ -408,6 +410,174 @@ body {
 .calorias-numero { font-size: 46px; font-weight: 900; margin-bottom: 12px; letter-spacing: -1px; }
 .unidad-cal { font-size: 18px; font-weight: 600; color: var(--texto-gris); }
 .calorias-descripcion { font-size: 13.5px; color: var(--texto-gris); line-height: 1.5; }
+
+.factor-card {
+    background: linear-gradient(180deg, rgba(0, 114, 255, 0.04) 0%, rgba(0, 0, 0, 0) 100%);
+    border-color: rgba(0, 114, 255, 0.15);
+}
+
+.grid-riesgos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.riesgo-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 130px;
+}
+
+.riesgo-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.riesgo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 8px;
+    align-self: flex-start;
+}
+
+.riesgo-alto { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.riesgo-moderado { background-color: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
+.riesgo-bajo { background-color: rgba(0, 230, 118, 0.15); color: var(--color-verde); border: 1px solid rgba(0, 230, 118, 0.3); }
+
+.alertas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.alerta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+
+.alerta-icon { font-size: 18px; color: #ef4444; flex-shrink: 0; margin-top: 1px; }
+.alerta-texto { font-size: 14px; color: var(--texto-blanco); line-height: 1.5; }
+
+.recomendaciones-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.recomendacion-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(0, 230, 118, 0.04);
+    border: 1px solid rgba(0, 230, 118, 0.12);
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+
+.recomendacion-numero {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--color-verde);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.recomendacion-texto { font-size: 14px; color: var(--texto-blanco); line-height: 1.6; }
+
+.nota-clinica-bloque {
+    background: linear-gradient(135deg, rgba(0, 114, 255, 0.06) 0%, rgba(155, 81, 224, 0.04) 100%);
+    border: 1px solid rgba(0, 114, 255, 0.15);
+    border-left: 4px solid var(--color-azul);
+    border-radius: 10px;
+    padding: 20px 24px;
+}
+
+.nota-clinica-texto {
+    font-size: 14.5px;
+    color: var(--texto-blanco);
+    line-height: 1.8;
+    font-weight: 400;
+}
+
+.explicaciones-accordion {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.explicaciones-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto-gris);
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.02);
+    transition: background 0.3s ease;
+    list-style: none;
+}
+
+.explicaciones-toggle::-webkit-details-marker { display: none; }
+.explicaciones-toggle:hover { background: rgba(255, 255, 255, 0.04); color: var(--texto-blanco); }
+
+details[open] .explicaciones-toggle ion-icon {
+    transform: rotate(180deg);
+}
+
+.explicaciones-toggle ion-icon {
+    transition: transform 0.3s ease;
+    font-size: 16px;
+}
+
+.explicaciones-contenido {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.explicaciones-contenido::-webkit-scrollbar { width: 6px; }
+.explicaciones-contenido::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 4px; }
+.explicaciones-contenido::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+.explicacion-item {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+}
+
+.explicacion-codigo {
+    font-size: 12px;
+    color: var(--texto-gris);
+    font-family: 'Courier New', monospace;
+    line-height: 1.5;
+    word-break: break-word;
+}
 
 .subtitulo-seccion-macros {
     font-size: 16px;
@@ -499,7 +669,8 @@ body {
     .grid-metricas-antropo, 
     .contenedor-balance-calorico, 
     .grid-tres-columnas-macros,
-    .grid-datos-introducidos {
+    .grid-datos-introducidos,
+    .grid-riesgos {
         grid-template-columns: 1fr;
     }
     .full-width-column {
