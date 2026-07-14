@@ -57,13 +57,17 @@ def register():
             flash('El correo ya está registrado.', 'error')
             return redirect(url_for('main.home'))
 
+        role = request.form.get('role', 'user').strip()
+        if role not in ('user', 'nutritionist'):
+            role = 'user'
+
         usuario = User(
             nombre=nombre,
             correo=correo,
             edad=int(edad),
             sexo=sexo.upper(),
             contrasena_hash=generate_password_hash(contrasena),
-            role='user'
+            role=role
         )
         db.session.add(usuario)
         db.session.commit()

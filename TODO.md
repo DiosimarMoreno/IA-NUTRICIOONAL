@@ -124,6 +124,5 @@
 - [ ] Ruta `GET /nutritionist/patient/<int:id>` con datos completos del paciente
 
 ### 9. Varios menores
-- [ ] Crear `seed.py` o comando flask para crear usuario nutricionista de prueba
 - [ ] Verificar que `estructura.md` refleje el estado actual
 - [ ] Verificar que `README.md` refleje el estado actual
